@@ -255,9 +255,28 @@ class TeacherCreateQuizViewModel(
         _uiState.update { it.copy(currentStep = prevStep, errorMessage = null) }
     }
 
+fun capitalizeEachWord(text: String): String {
+    if (text.isEmpty()) return text
+    val sb = StringBuilder()
+    var capitalizeNext = true
+    for (char in text) {
+        if (char.isWhitespace()) {
+            sb.append(char)
+            capitalizeNext = true
+        } else if (capitalizeNext && char.isLetter()) {
+            sb.append(char.uppercaseChar())
+            capitalizeNext = false
+        } else {
+            sb.append(char)
+            capitalizeNext = false
+        }
+    }
+    return sb.toString()
+}
+
     // Step 3: Basic Info Modifiers
     fun onTitleChanged(title: String) {
-        val capitalized = title.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+        val capitalized = capitalizeEachWord(title)
         _uiState.update { it.copy(title = capitalized, errorMessage = null) }
     }
 
@@ -438,7 +457,7 @@ class TeacherCreateQuizViewModel(
 
     fun proceedToManualQuestionEditor() {
         val s = _uiState.value
-        val capitalizedTitle = s.title.trim().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+        val capitalizedTitle = capitalizeEachWord(s.title.trim())
         if (capitalizedTitle.isBlank()) {
             _uiState.update { it.copy(errorMessage = "Please enter a quiz title.") }
             return
