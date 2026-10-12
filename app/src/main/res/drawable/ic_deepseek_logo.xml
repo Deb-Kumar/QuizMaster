@@ -1,0 +1,20 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- Outer rounded background in DeepSeek Blue -->
+    <path
+        android:fillColor="#0284C7"
+        android:pathData="M24,4 C35.046,4 44,12.954 44,24 C44,35.046 35.046,44 24,44 C12.954,44 4,35.046 4,24 C4,12.954 12.954,4 24,4 Z" />
+    <!-- DeepSeek Whale / Wave dynamic curve symbol -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M16,28 C16,20 22,14 30,14 C34,14 36,16 36,18 C36,22 30,22 26,24 C22,26 20,30 20,33 C18,32 16,30.5 16,28 Z" />
+    <path
+        android:fillColor="#38BDF8"
+        android:pathData="M24,20 C28,18 34,22 32,27 C30,29 27,29 24,27 C22,25.5 22,22 24,20 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M31,23 A2,2 0 1,0 31,27 A2,2 0 1,0 31,23 Z" />
+</vector>

@@ -1,0 +1,12 @@
+<resources>
+    <color name="quiz_background">#F2F7F3</color>
+    <color name="quiz_surface">#FFFFFF</color>
+    <color name="quiz_green">#087F5B</color>
+    <color name="quiz_green_dark">#075E46</color>
+    <color name="quiz_ink">#18332C</color>
+    <color name="quiz_muted">#60756D</color>
+    <color name="quiz_line">#DCE8E0</color>
+    <color name="quiz_error">#B5473C</color>
+    <color name="quiz_accent">#F0A34A</color>
+    <color name="quiz_window_bg">#130D2B</color>
+</resources>

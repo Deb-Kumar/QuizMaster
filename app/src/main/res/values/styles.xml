@@ -1,0 +1,11 @@
+<resources>
+    <style name="Theme.QuizMaster" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">@color/quiz_green</item>
+        <item name="android:statusBarColor">@color/quiz_background</item>
+        <item name="android:navigationBarColor">@color/quiz_background</item>
+        <item name="android:windowBackground">@color/quiz_window_bg</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+</resources>

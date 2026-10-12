@@ -1,0 +1,34 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- Outer rounded background in Neon Indigo / Violet -->
+    <path
+        android:fillColor="#4F46E5"
+        android:pathData="M24,4 C35.046,4 44,12.954 44,24 C44,35.046 35.046,44 24,44 C12.954,44 4,35.046 4,24 C4,12.954 12.954,4 24,4 Z" />
+    <!-- Agent Router Central Hub node and network pathways -->
+    <!-- Center Node -->
+    <path
+        android:fillColor="#38BDF8"
+        android:pathData="M24,19 A5,5 0 1,0 24,29 A5,5 0 1,0 24,19 Z" />
+    <!-- Outer Node Top-Left -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M14,13 A3,3 0 1,0 14,19 A3,3 0 1,0 14,13 Z" />
+    <!-- Outer Node Top-Right -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M34,13 A3,3 0 1,0 34,19 A3,3 0 1,0 34,13 Z" />
+    <!-- Outer Node Bottom -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M24,33 A3,3 0 1,0 24,39 A3,3 0 1,0 24,33 Z" />
+    <!-- Connecting network lines -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M16,17 L21,21 M32,17 L27,21 M24,27 L24,33" />
+</vector>
+

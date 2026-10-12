@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">QuizMaster</string>
+    <string name="welcome_eyebrow">QUICK QUIZ  /  01</string>
+    <string name="welcome_title">Ready to test\nyour knowledge?</string>
+    <string name="welcome_subtitle">Fifteen questions. One fresh challenge.</string>
+    <string name="question_count">15 QUESTIONS</string>
+    <string name="points_per_question">1 POINT EACH</string>
+    <string name="start_quiz">Start quiz</string>
+    <string name="continue_quiz">Continue quiz</string>
+    <string name="shuffle_questions">Shuffle questions</string>
+    <string name="shuffle_hint">Mix up the order for a new challenge.</string>
+    <string name="question_number">QUESTION %1$d  /  %2$d</string>
+    <string name="question_progress">Question %1$d of %2$d</string>
+    <string name="previous_question">Previous</string>
+    <string name="next_question">Next question</string>
+    <string name="finish_quiz">See my score</string>
+    <string name="select_answer">Choose an answer to continue</string>
+    <string name="correct_feedback">Correct. %1$s</string>
+    <string name="incorrect_feedback">Not quite. The correct answer is %1$s.\n%2$s</string>
+    <string name="quiz_completed">ROUND COMPLETE</string>
+    <string name="score_label">%1$d / %2$d</string>
+    <string name="percentage_label">%1$d%% correct</string>
+    <string name="answer_review">ANSWER REVIEW</string>
+    <string name="review_question_number">QUESTION %1$d  /  %2$s</string>
+    <string name="your_answer">Your answer: %1$s</string>
+    <string name="correct_answer">Correct answer: %1$s</string>
+    <string name="not_answered">Not answered</string>
+    <string name="restart_quiz">Play again</string>
+</resources>
