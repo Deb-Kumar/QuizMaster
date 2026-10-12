@@ -3,12 +3,15 @@ package com.example.onlinequizapp.ui.teacher.create
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,7 +26,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Event
@@ -31,9 +37,14 @@ import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Public
-import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Quiz
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.SentimentDissatisfied
+import androidx.compose.material.icons.filled.SentimentNeutral
+import androidx.compose.material.icons.filled.SentimentSatisfied
 import androidx.compose.material.icons.filled.Shuffle
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -49,20 +60,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.onlinequizapp.domain.model.AssignmentType
 import com.example.onlinequizapp.domain.model.Batch
+import com.example.onlinequizapp.domain.model.Difficulty
 import com.example.onlinequizapp.domain.model.EnrolledStudent
+import com.example.onlinequizapp.domain.model.TimerMode
+import com.example.onlinequizapp.ui.components.SubjectLogoRegistry
 import com.example.onlinequizapp.ui.teacher.isTeacherInDarkTheme
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+private val StandardTimeLimits = listOf(5, 10, 15, 30, 45)
+
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PublishTargetDialog(
     targetType: AssignmentType,
@@ -82,6 +102,16 @@ fun PublishTargetDialog(
     scheduleSummary: String? = null,
     shuffleQuestionsAndOptions: Boolean = false,
     onToggleShuffleQuestionsAndOptions: (Boolean) -> Unit = {},
+    quizTitle: String = "",
+    quizSubtitle: String = "",
+    quizLogo: String = "",
+    difficulty: Difficulty = Difficulty.EASY,
+    categories: List<String> = emptyList(),
+    questionCount: Int = 0,
+    timerMode: TimerMode = TimerMode.NONE,
+    onTimerModeChanged: (TimerMode) -> Unit = {},
+    timeLimitMinutes: Int = 5,
+    onTimeLimitMinutesChanged: (Int) -> Unit = {},
     onDismiss: () -> Unit,
     onConfirmPublish: () -> Unit,
     isLoading: Boolean,
@@ -126,6 +156,195 @@ fun PublishTargetDialog(
 
                     IconButton(onClick = onDismiss, modifier = Modifier.size(32.dp)) {
                         Icon(imageVector = Icons.Default.Close, contentDescription = "Close", tint = if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B))
+                    }
+                }
+
+                // -----------------------------------------------------------------
+                // Quiz Overview Card (Subject Logo, Title, Subtitle, Difficulty, Category, Question Count)
+                // -----------------------------------------------------------------
+                val overviewCardBg = if (isDark) Color(0xFF1E293B) else Color(0xFFF8FAFC)
+                val overviewCardBorder = if (isDark) Color(0xFF334155) else Color(0xFFE2E8F0)
+                val logoRes = SubjectLogoRegistry.getDrawableRes(quizLogo)
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(overviewCardBg)
+                        .border(1.dp, overviewCardBorder, RoundedCornerShape(16.dp))
+                        .padding(14.dp)
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // Subject Logo
+                            Box(
+                                modifier = Modifier
+                                    .size(46.dp)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(
+                                        Brush.linearGradient(
+                                            listOf(Color(0xFF6366F1), Color(0xFF8B5CF6))
+                                        )
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                if (logoRes != null) {
+                                    Image(
+                                        painter = painterResource(id = logoRes),
+                                        contentDescription = quizTitle,
+                                        modifier = Modifier
+                                            .size(30.dp)
+                                            .padding(2.dp),
+                                        contentScale = ContentScale.Fit
+                                    )
+                                } else {
+                                    Icon(
+                                        imageVector = Icons.Default.Quiz,
+                                        contentDescription = "Quiz Logo",
+                                        tint = Color.White,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.width(12.dp))
+
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = quizTitle.ifBlank { "Untitled Quiz" },
+                                    color = if (isDark) Color.White else Color(0xFF0F172A),
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+
+                                if (quizSubtitle.isNotBlank()) {
+                                    Spacer(modifier = Modifier.height(2.dp))
+                                    Text(
+                                        text = quizSubtitle,
+                                        color = if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B),
+                                        fontSize = 11.5.sp,
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                            }
+                        }
+
+                        // Metadata Badges (Difficulty, Question Count, Category)
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            // Difficulty Badge (Easy = Green, Medium = Amber, Hard = Red)
+                            val (diffColor, diffBg, diffBorder) = when (difficulty) {
+                                Difficulty.EASY -> Triple(
+                                    if (isDark) Color(0xFF10B981) else Color(0xFF059669),
+                                    if (isDark) Color(0xFF064E3B).copy(alpha = 0.5f) else Color(0xFFECFDF5),
+                                    if (isDark) Color(0xFF10B981).copy(alpha = 0.6f) else Color(0xFFA7F3D0)
+                                )
+                                Difficulty.MEDIUM -> Triple(
+                                    if (isDark) Color(0xFFF59E0B) else Color(0xFFD97706),
+                                    if (isDark) Color(0xFF451A03).copy(alpha = 0.5f) else Color(0xFFFFFBEB),
+                                    if (isDark) Color(0xFFF59E0B).copy(alpha = 0.6f) else Color(0xFFFDE68A)
+                                )
+                                Difficulty.HARD -> Triple(
+                                    if (isDark) Color(0xFFEF4444) else Color(0xFFDC2626),
+                                    if (isDark) Color(0xFF450A0A).copy(alpha = 0.5f) else Color(0xFFFEF2F2),
+                                    if (isDark) Color(0xFFEF4444).copy(alpha = 0.6f) else Color(0xFFFECACA)
+                                )
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(diffBg)
+                                    .border(BorderStroke(0.8.dp, diffBorder), RoundedCornerShape(6.dp))
+                                    .padding(horizontal = 7.dp, vertical = 3.dp)
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    val diffIcon = when (difficulty) {
+                                        Difficulty.EASY -> Icons.Default.SentimentSatisfied
+                                        Difficulty.MEDIUM -> Icons.Default.SentimentNeutral
+                                        Difficulty.HARD -> Icons.Default.SentimentDissatisfied
+                                    }
+                                    Icon(
+                                        imageVector = diffIcon,
+                                        contentDescription = null,
+                                        tint = diffColor,
+                                        modifier = Modifier.size(11.dp)
+                                    )
+                                    Text(
+                                        text = difficulty.label,
+                                        color = diffColor,
+                                        fontSize = 10.5.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+
+                            // Question Count Badge
+                            val countBg = if (isDark) Color(0xFF1E1B4B).copy(alpha = 0.6f) else Color(0xFFEEF2FF)
+                            val countText = if (isDark) Color(0xFFA5B4FC) else Color(0xFF4F46E5)
+                            val countBorder = if (isDark) Color(0xFF6366F1).copy(alpha = 0.5f) else Color(0xFFC7D2FE)
+
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(countBg)
+                                    .border(BorderStroke(0.8.dp, countBorder), RoundedCornerShape(6.dp))
+                                    .padding(horizontal = 7.dp, vertical = 3.dp)
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Quiz,
+                                        contentDescription = null,
+                                        tint = countText,
+                                        modifier = Modifier.size(11.dp)
+                                    )
+                                    Text(
+                                        text = "$questionCount Questions",
+                                        color = countText,
+                                        fontSize = 10.5.sp,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                }
+                            }
+
+                            // Category Badges
+                            if (categories.isNotEmpty()) {
+                                categories.forEach { cat ->
+                                    val catBg = if (isDark) Color(0xFF0F172A) else Color(0xFFF1F5F9)
+                                    val catText = if (isDark) Color(0xFF94A3B8) else Color(0xFF475569)
+                                    val catBorder = if (isDark) Color(0xFF334155) else Color(0xFFCBD5E1)
+
+                                    Box(
+                                        modifier = Modifier
+                                            .clip(RoundedCornerShape(6.dp))
+                                            .background(catBg)
+                                            .border(BorderStroke(0.8.dp, catBorder), RoundedCornerShape(6.dp))
+                                            .padding(horizontal = 6.dp, vertical = 3.dp)
+                                    ) {
+                                        Text(
+                                            text = cat,
+                                            color = catText,
+                                            fontSize = 10.sp,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -468,6 +687,243 @@ fun PublishTargetDialog(
                                         fontSize = 11.5.sp,
                                         fontWeight = FontWeight.Bold
                                     )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // -----------------------------------------------------------------
+                // Time Mode Configuration Card
+                // -----------------------------------------------------------------
+                val timeCardBg = if (isDark) Color(0xFF1E293B) else Color(0xFFF8FAFC)
+                val timeCardBorder = if (timerMode == TimerMode.COUNTDOWN) {
+                    if (isDark) Color(0xFF6366F1) else Color(0xFF818CF8)
+                } else {
+                    if (isDark) Color(0xFF334155) else Color(0xFFE2E8F0)
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(timeCardBg)
+                        .border(1.dp, timeCardBorder, RoundedCornerShape(16.dp))
+                        .padding(13.dp)
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        // Header Row
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .clip(RoundedCornerShape(9.dp))
+                                    .background(Brush.linearGradient(listOf(Color(0xFF6366F1), Color(0xFF8B5CF6)))),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Schedule,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(17.dp)
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.width(10.dp))
+
+                            Column {
+                                Text(
+                                    text = "Time Mode",
+                                    color = if (isDark) Color.White else Color(0xFF0F172A),
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                                Text(
+                                    text = if (timerMode == TimerMode.COUNTDOWN) "Quiz has a countdown timer ($timeLimitMinutes mins)" else "No time limit (Self-paced)",
+                                    color = if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B),
+                                    fontSize = 11.sp
+                                )
+                            }
+                        }
+
+                        // Mode Selector: Timed vs No Limit
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(if (isDark) Color(0xFF0F172A) else Color(0xFFE2E8F0))
+                                .padding(3.dp),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            val isTimed = timerMode == TimerMode.COUNTDOWN
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(if (isTimed) (if (isDark) Color(0xFF6366F1) else Color(0xFF4F46E5)) else Color.Transparent)
+                                    .clickable { onTimerModeChanged(TimerMode.COUNTDOWN) }
+                                    .padding(vertical = 8.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        imageVector = Icons.Default.Timer,
+                                        contentDescription = null,
+                                        tint = if (isTimed) Color.White else (if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B)),
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(
+                                        text = "Timed",
+                                        color = if (isTimed) Color.White else (if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B)),
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 11.5.sp
+                                    )
+                                }
+                            }
+
+                            val isNoLimit = timerMode == TimerMode.NONE
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(if (isNoLimit) (if (isDark) Color(0xFF6366F1) else Color(0xFF4F46E5)) else Color.Transparent)
+                                    .clickable { onTimerModeChanged(TimerMode.NONE) }
+                                    .padding(vertical = 8.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        imageVector = Icons.Default.Block,
+                                        contentDescription = null,
+                                        tint = if (isNoLimit) Color.White else (if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B)),
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(
+                                        text = "No Limit",
+                                        color = if (isNoLimit) Color.White else (if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B)),
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 11.5.sp
+                                    )
+                                }
+                            }
+                        }
+
+                        // If Timed: Show Preset Buttons & Custom Stepper
+                        if (timerMode == TimerMode.COUNTDOWN) {
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Text(
+                                    text = "Quick Presets",
+                                    color = if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B),
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    StandardTimeLimits.forEach { limit ->
+                                        val isSelected = timeLimitMinutes == limit
+                                        Box(
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .clip(RoundedCornerShape(8.dp))
+                                                .background(
+                                                    if (isSelected) (if (isDark) Color(0xFF6366F1) else Color(0xFF4F46E5))
+                                                    else (if (isDark) Color(0xFF0F172A) else Color.White)
+                                                )
+                                                .border(
+                                                    1.dp,
+                                                    if (isSelected) Color.Transparent else (if (isDark) Color(0xFF334155) else Color(0xFFCBD5E1)),
+                                                    RoundedCornerShape(8.dp)
+                                                )
+                                                .clickable { onTimeLimitMinutesChanged(limit) }
+                                                .padding(vertical = 6.dp),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Text(
+                                                text = "${limit}m",
+                                                color = if (isSelected) Color.White else (if (isDark) Color(0xFFE2E8F0) else Color(0xFF334155)),
+                                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                                fontSize = 11.sp
+                                            )
+                                        }
+                                    }
+                                }
+
+                                // Custom Time Limit Stepper
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(if (isDark) Color(0xFF0F172A) else Color.White)
+                                        .border(1.dp, if (isDark) Color(0xFF334155) else Color(0xFFCBD5E1), RoundedCornerShape(8.dp))
+                                        .padding(horizontal = 10.dp, vertical = 6.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = "Custom Duration",
+                                        color = if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B),
+                                        fontSize = 11.5.sp
+                                    )
+
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(28.dp)
+                                                .clip(CircleShape)
+                                                .background(if (isDark) Color(0xFF334155) else Color(0xFFE2E8F0))
+                                                .clickable {
+                                                    if (timeLimitMinutes > 1) {
+                                                        onTimeLimitMinutesChanged(timeLimitMinutes - 1)
+                                                    }
+                                                },
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Remove,
+                                                contentDescription = "Decrease",
+                                                tint = if (isDark) Color.White else Color(0xFF0F172A),
+                                                modifier = Modifier.size(14.dp)
+                                            )
+                                        }
+
+                                        Text(
+                                            text = "$timeLimitMinutes min",
+                                            color = if (isDark) Color.White else Color(0xFF0F172A),
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 12.sp
+                                        )
+
+                                        Box(
+                                            modifier = Modifier
+                                                .size(28.dp)
+                                                .clip(CircleShape)
+                                                .background(if (isDark) Color(0xFF334155) else Color(0xFFE2E8F0))
+                                                .clickable {
+                                                    if (timeLimitMinutes < 180) {
+                                                        onTimeLimitMinutesChanged(timeLimitMinutes + 1)
+                                                    }
+                                                },
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Add,
+                                                contentDescription = "Increase",
+                                                tint = if (isDark) Color.White else Color(0xFF0F172A),
+                                                modifier = Modifier.size(14.dp)
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }

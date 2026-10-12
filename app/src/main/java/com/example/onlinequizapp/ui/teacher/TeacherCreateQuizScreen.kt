@@ -313,6 +313,16 @@ fun TeacherCreateQuizScreen(
                     onAvailabilityEndMillisChanged = { viewModel.onAvailabilityEndMillisChanged(it) },
                     shuffleQuestionsAndOptions = uiState.shuffleQuestionsAndOptions,
                     onToggleShuffleQuestionsAndOptions = { viewModel.onToggleShuffleQuestionsAndOptions(it) },
+                    quizTitle = uiState.title,
+                    quizSubtitle = uiState.description,
+                    quizLogo = uiState.selectedLogo,
+                    difficulty = uiState.difficulty,
+                    categories = uiState.categories,
+                    questionCount = uiState.questions.size,
+                    timerMode = uiState.timerMode,
+                    onTimerModeChanged = { viewModel.onTimerModeChanged(it) },
+                    timeLimitMinutes = uiState.timeLimitMinutes,
+                    onTimeLimitMinutesChanged = { viewModel.onTimeLimitMinutesChanged(it) },
                     onDismiss = { viewModel.dismissPublishDialog() },
                     onConfirmPublish = {
                         viewModel.publishQuizConfirmed { publishedQuiz ->
