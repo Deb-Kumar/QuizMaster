@@ -19,3 +19,5 @@ captures
 *.apk
 *.aab
 scratch_screen.png
+google-services.json
+app/google-services.json
