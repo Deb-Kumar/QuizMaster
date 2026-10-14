@@ -25,6 +25,7 @@ sealed class Screen(val route: String) {
     }
     data object Leaderboard : Screen("leaderboard")
     data object Certificates : Screen("certificates")
+    data object TeacherAnalytics : Screen("teacher_analytics")
     data object Review : Screen("review/{quizId}?initialIndex={initialIndex}") {
         fun createRoute(quizId: String, initialIndex: Int = 0) = "review/$quizId?initialIndex=$initialIndex"
     }

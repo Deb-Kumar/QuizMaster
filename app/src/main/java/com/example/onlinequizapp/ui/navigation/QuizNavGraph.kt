@@ -282,11 +282,22 @@ fun QuizNavGraph(
                 onTestQuizClick = { quizId ->
                     navController.navigate(Screen.Quiz.createRoute(quizId))
                 },
+                onViewAnalyticsClick = {
+                    navController.navigate(Screen.TeacherAnalytics.route)
+                },
                 onLogoutClick = {
                     AuthSessionManager.clear()
                     navController.navigate(Screen.Login.route) {
                         popUpTo(0) { inclusive = true }
                     }
+                }
+            )
+        }
+
+        composable(route = Screen.TeacherAnalytics.route) {
+            com.example.onlinequizapp.ui.teacher.analytics.TeacherAnalyticsScreen(
+                onBackClick = {
+                    navController.popBackStack()
                 }
             )
         }

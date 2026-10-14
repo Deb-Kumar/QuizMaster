@@ -50,6 +50,7 @@ fun TeacherDashboardScreen(
     onEditQuizClick: (String) -> Unit = {},
     onPublishQuizClick: (String) -> Unit = onEditQuizClick,
     onTestQuizClick: (String) -> Unit,
+    onViewAnalyticsClick: () -> Unit = {},
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: TeacherViewModel = viewModel()
@@ -191,7 +192,7 @@ fun TeacherDashboardScreen(
                         onCreateQuizClick = onCreateQuizClick,
                         onTestQuizClick = onTestQuizClick,
                         onManageStudentsClick = { selectedBottomTab = 2 },
-                        onViewAnalyticsClick = { showAnalyticsDialog = true },
+                        onViewAnalyticsClick = onViewAnalyticsClick,
                         onCertificatesClick = { showCertificatesDialog = true },
                         onNotificationClick = { showNotificationsDialog = true },
                         onLogoutClick = { showLogoutDialog = true },
@@ -248,7 +249,7 @@ fun TeacherDashboardScreen(
                         onNotificationClick = { showNotificationsDialog = true },
                         onCreateQuizClick = onCreateQuizClick,
                         onManageStudentsClick = { showStudentsDialog = true },
-                        onViewAnalyticsClick = { showAnalyticsDialog = true },
+                        onViewAnalyticsClick = onViewAnalyticsClick,
                         onCertificatesClick = { showCertificatesDialog = true },
                         onMyQuizzesClick = { selectedBottomTab = 1 },
                         onLogoutClick = {
