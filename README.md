@@ -10,6 +10,7 @@
 [![Compose](https://img.shields.io/badge/Jetpack%20Compose-Material%203-4285F4.svg?style=for-the-badge&logo=jetpackcompose&logoColor=white)](https://developer.android.com/jetpack/compose)
 [![Firebase](https://img.shields.io/badge/Firebase-Auth%20%7C%20Firestore%20%7C%20Hosting-FFCA28.svg?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com)
 [![Tests](https://img.shields.io/badge/Unit%20%26%20Security%20Tests-63%20Passed%20(100%25)-10B981.svg?style=for-the-badge&logo=checkmarx&logoColor=white)](#-automated-testing--qa)
+[![Version](https://img.shields.io/badge/Version-5.0.1-blue.svg?style=for-the-badge&logo=android)](https://github.com/Deb-Kumar/QuizMaster/releases)
 [![Build Status](https://img.shields.io/badge/Build-Debug%20%26%20Release%20Passing-success.svg?style=for-the-badge&logo=gradle&logoColor=white)](#-building--compilation)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 

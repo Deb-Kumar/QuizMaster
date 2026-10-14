@@ -121,7 +121,7 @@ internal fun AboutUsDialog(
                                 )
                             )
                             Text(
-                                text = "QuizMaster • Version 1.0.0",
+                                text = "QuizMaster • Version 5.0.1",
                                 style = TextStyle(
                                     color = textSecondary,
                                     fontSize = 12.sp
@@ -227,7 +227,7 @@ internal fun AboutUsDialog(
                         icon = Icons.Default.Check,
                         iconTint = Color(0xFF6366F1),
                         label = "Version",
-                        value = "1.0.0 (Release Build)",
+                        value = "5.0.1 (Release Build)",
                         textPrimary = textPrimary,
                         textSecondary = textSecondary
                     )

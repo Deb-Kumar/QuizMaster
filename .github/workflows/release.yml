@@ -36,7 +36,8 @@ jobs:
 
       - name: Rename APK for Release
         run: |
-          cp app/build/outputs/apk/debug/app-debug.apk QuizMaster-v1.0.0.apk
+          TAG_NAME="${{ github.ref_name }}"
+          cp app/build/outputs/apk/debug/app-debug.apk "QuizMaster-${TAG_NAME}.apk"
 
       - name: Create GitHub Release and Upload APK
         uses: softprops/action-gh-release@v2
@@ -45,5 +46,5 @@ jobs:
           name: "QuizMaster ${{ github.ref_name }}"
           draft: false
           prerelease: false
-          files: QuizMaster-v1.0.0.apk
+          files: QuizMaster-*.apk
           generate_release_notes: true
