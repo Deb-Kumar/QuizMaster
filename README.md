@@ -33,7 +33,7 @@ Built with **Jetpack Compose**, **Material 3**, and **Google Firebase**, QuizMas
 
 Every issued certificate features a dynamic machine-readable **ZXing QR code**. When scanned by employers, admissions committees, or students, it loads the official QuizMaster verification portal deployed globally on **Firebase Hosting**:
 
-👉 **Live Verification Portal:** [https://quizmaster-dd2f8.web.app/verify/QM-JS92-20261125-003](https://quizmaster-dd2f8.web.app/verify/QM-JS92-20261125-003)
+👉 **Live Verification Portal:** [https://quizmaster-dd2f8.web.app/verify/](https://quizmaster-dd2f8.web.app/verify/)
 
 * **Dual-Column Credential Showcase**: High-fidelity digital diploma view paired with a blockchain-grade cryptographic audit panel.
 * **Instant Verification Actions**: Recipient validation, official academic seals, single-click **Print / Save as PDF**, and direct **Share Verification Link**.
