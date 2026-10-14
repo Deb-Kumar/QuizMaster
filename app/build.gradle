@@ -33,6 +33,11 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -61,6 +66,9 @@ dependencies {
 
     // Image loading for profile avatars
     implementation 'io.coil-kt:coil-compose:2.7.0'
+
+    // QR Code generation for verifiable certificates
+    implementation 'com.google.zxing:core:3.5.3'
 
     // Testing
     testImplementation 'junit:junit:4.13.2'

@@ -1054,7 +1054,7 @@ internal fun TeacherCertificatesDialog(
     submissions: List<QuizSessionState> = emptyList(),
     onDismiss: () -> Unit
 ) {
-    val certifiedCount = submissions.count { it.scorePercentage >= 80 }
+    val certifiedCount = submissions.count { it.scorePercentage > 80 }
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = TeacherCardBg,

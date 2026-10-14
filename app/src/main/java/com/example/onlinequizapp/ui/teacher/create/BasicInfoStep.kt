@@ -116,7 +116,16 @@ import com.example.onlinequizapp.ui.teacher.QuizBuilderTextSecondary
 import com.example.onlinequizapp.ui.teacher.QuizBuilderTextMuted
 import com.example.onlinequizapp.ui.teacher.isTeacherInDarkTheme
 
-private val StandardTimeLimits = listOf(5, 10, 15, 30, 45)
+private fun capitalizeEachWord(text: String): String {
+    if (text.isEmpty()) return text
+    return text.split(" ").joinToString(" ") { word ->
+        if (word.isNotEmpty()) {
+            word.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+        } else {
+            word
+        }
+    }
+}
 
 private val CardBackground: Color
     @Composable get() = QuizBuilderCardBg
@@ -222,9 +231,6 @@ fun BasicInfoStep(
         mutableStateOf(if (questionCount !in listOf(5, 10, 15, 20)) questionCount.toString() else "")
     }
 
-    var isCustomTimeSelected by remember {
-        mutableStateOf(timeLimitMinutes !in StandardTimeLimits)
-    }
 
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -505,14 +511,11 @@ fun BasicInfoStep(
                         value = title,
                         onValueChange = { input ->
                             if (input.length <= 100) {
-                                val capitalized = input.replaceFirstChar { char ->
-                                    if (char.isLowerCase()) char.titlecase() else char.toString()
-                                }
-                                onTitleChanged(capitalized)
+                                onTitleChanged(capitalizeEachWord(input))
                             }
                         },
                         keyboardOptions = KeyboardOptions(
-                            capitalization = KeyboardCapitalization.Sentences
+                            capitalization = KeyboardCapitalization.Words
                         ),
                         placeholder = { Text("Enter quiz title...", color = QuizBuilderTextMuted, fontSize = 13.5.sp) },
                         singleLine = true,
@@ -1027,17 +1030,29 @@ fun BasicInfoStep(
                 ).forEach { (diff, label, icon) ->
                     val isSelected = difficulty == diff
                     val pillBg = if (isSelected) {
-                        if (isDark) Color(0xFF4F46E5).copy(alpha = 0.35f) else Color(0xFFEEF2FF)
+                        when (diff) {
+                            Difficulty.EASY -> if (isDark) Color(0xFF064E3B).copy(alpha = 0.5f) else Color(0xFFECFDF5)
+                            Difficulty.MEDIUM -> if (isDark) Color(0xFF451A03).copy(alpha = 0.5f) else Color(0xFFFFFBEB)
+                            Difficulty.HARD -> if (isDark) Color(0xFF450A0A).copy(alpha = 0.5f) else Color(0xFFFEF2F2)
+                        }
                     } else {
                         if (isDark) Color(0xFF0C1438) else Color(0xFFF1F5F9)
                     }
                     val pillBorder = if (isSelected) {
-                        Color(0xFF6366F1)
+                        when (diff) {
+                            Difficulty.EASY -> if (isDark) Color(0xFF10B981) else Color(0xFF059669)
+                            Difficulty.MEDIUM -> if (isDark) Color(0xFFF59E0B) else Color(0xFFD97706)
+                            Difficulty.HARD -> if (isDark) Color(0xFFEF4444) else Color(0xFFDC2626)
+                        }
                     } else {
                         if (isDark) Color(0xFF16255C) else Color(0xFFE2E8F0)
                     }
                     val contentColor = if (isSelected) {
-                        if (isDark) Color.White else Color(0xFF4338CA)
+                        when (diff) {
+                            Difficulty.EASY -> if (isDark) Color(0xFF10B981) else Color(0xFF059669)
+                            Difficulty.MEDIUM -> if (isDark) Color(0xFFF59E0B) else Color(0xFFD97706)
+                            Difficulty.HARD -> if (isDark) Color(0xFFEF4444) else Color(0xFFDC2626)
+                        }
                     } else {
                         if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B)
                     }
@@ -1069,359 +1084,6 @@ fun BasicInfoStep(
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold,
                                 fontSize = 12.5.sp
                             )
-                        }
-                    }
-                }
-            }
-        }
-
-        // -----------------------------------------------------------------
-        // 5. Time Mode Card (Shown for Manual Quiz Creation)
-        // -----------------------------------------------------------------
-        if (creationMethod == QuizCreationMethod.MANUAL) {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = CardBackground),
-                border = BorderStroke(1.dp, CardBorderColor)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 13.dp, vertical = 11.dp),
-                    verticalArrangement = Arrangement.spacedBy(9.dp)
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.AccessTime,
-                            contentDescription = null,
-                            tint = Color(0xFF93C5FD),
-                            modifier = Modifier.size(17.dp)
-                        )
-                        Spacer(modifier = Modifier.width(7.dp))
-                        Text(
-                            text = "Time Mode",
-                            color = QuizBuilderTextPrimary,
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-
-                    // 2 Mode Pills
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        // Timed Pill
-                        val isTimed = timerMode == TimerMode.COUNTDOWN
-                        val timedBg = if (isTimed) Brush.horizontalGradient(listOf(Color(0xFF6366F1), Color(0xFF3B82F6)))
-                        else Brush.linearGradient(listOf(if (isDark) Color(0xFF0C1438) else Color(0xFFF1F5F9), if (isDark) Color(0xFF0C1438) else Color(0xFFF1F5F9)))
-                        val timedBorder = if (isTimed) Color(0xFF818CF8) else (if (isDark) Color(0xFF16255C) else Color(0xFFE2E8F0))
-                        val timedText = if (isTimed) Color.White else QuizBuilderTextSecondary
-
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(timedBg)
-                                .border(1.dp, timedBorder, RoundedCornerShape(12.dp))
-                                .clickable { onTimerModeChanged(TimerMode.COUNTDOWN) }
-                                .padding(vertical = 10.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    imageVector = Icons.Default.Timer,
-                                    contentDescription = null,
-                                    tint = timedText,
-                                    modifier = Modifier.size(17.dp)
-                                )
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text(
-                                    text = "Timed",
-                                    color = timedText,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 12.5.sp
-                                )
-                            }
-                        }
-
-                        // No Limit Pill
-                        val isNoLimit = timerMode == TimerMode.NONE
-                        val noLimitBg = if (isNoLimit) Brush.horizontalGradient(listOf(Color(0xFF6366F1), Color(0xFF3B82F6)))
-                        else Brush.linearGradient(listOf(if (isDark) Color(0xFF0C1438) else Color(0xFFF1F5F9), if (isDark) Color(0xFF0C1438) else Color(0xFFF1F5F9)))
-                        val noLimitBorder = if (isNoLimit) Color(0xFF818CF8) else (if (isDark) Color(0xFF16255C) else Color(0xFFE2E8F0))
-                        val noLimitText = if (isNoLimit) Color.White else QuizBuilderTextSecondary
-
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(noLimitBg)
-                                .border(1.dp, noLimitBorder, RoundedCornerShape(12.dp))
-                                .clickable { onTimerModeChanged(TimerMode.NONE) }
-                                .padding(vertical = 10.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    imageVector = Icons.Default.Block,
-                                    contentDescription = null,
-                                    tint = noLimitText,
-                                    modifier = Modifier.size(17.dp)
-                                )
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text(
-                                    text = "No Limit",
-                                    color = noLimitText,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 12.5.sp
-                                )
-                            }
-                        }
-                    }
-
-                    // Timed Configuration Section: 5m, 10m, 15m, 30m, 45m, Custom
-                    if (timerMode == TimerMode.COUNTDOWN) {
-                        Spacer(modifier = Modifier.height(1.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Schedule,
-                                contentDescription = null,
-                                tint = Color(0xFF93C5FD),
-                                modifier = Modifier.size(15.dp)
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = "Time Limit: $timeLimitMinutes min",
-                                color = QuizBuilderTextPrimary,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-
-                        // Pills Row: 5m, 10m, 15m, 30m, 45m, and Custom
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(5.dp)
-                        ) {
-                            StandardTimeLimits.forEach { min ->
-                                val isSel = !isCustomTimeSelected && timeLimitMinutes == min
-                                val pillBg = if (isSel) Brush.horizontalGradient(listOf(Color(0xFF6366F1), Color(0xFF4F46E5)))
-                                else Brush.linearGradient(listOf(if (isDark) Color(0xFF0F1A42) else Color(0xFFF1F5F9), if (isDark) Color(0xFF0F1A42) else Color(0xFFF1F5F9)))
-                                val pillBorder = if (isSel) Color(0xFF818CF8) else (if (isDark) Color(0xFF1A2A62) else Color(0xFFE2E8F0))
-                                val pillText = if (isSel) Color.White else QuizBuilderTextSecondary
-
-                                Box(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .clip(RoundedCornerShape(9.dp))
-                                        .background(pillBg)
-                                        .border(1.dp, pillBorder, RoundedCornerShape(9.dp))
-                                        .clickable {
-                                            isCustomTimeSelected = false
-                                            onTimeLimitMinutesChanged(min)
-                                        }
-                                        .padding(vertical = 7.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = "${min}m",
-                                        color = pillText,
-                                        fontSize = 11.5.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
-                            }
-
-                            // Custom Pill after 45m
-                            val isCustomActive = isCustomTimeSelected
-                            val customBg = if (isCustomActive) Brush.horizontalGradient(listOf(Color(0xFF6366F1), Color(0xFF4F46E5)))
-                            else Brush.linearGradient(listOf(if (isDark) Color(0xFF0F1A42) else Color(0xFFF1F5F9), if (isDark) Color(0xFF0F1A42) else Color(0xFFF1F5F9)))
-                            val customBorder = if (isCustomActive) Color(0xFF818CF8) else (if (isDark) Color(0xFF1A2A62) else Color(0xFFE2E8F0))
-                            val customText = if (isCustomActive) Color.White else QuizBuilderTextSecondary
-
-                            Box(
-                                modifier = Modifier
-                                    .weight(1.2f)
-                                    .clip(RoundedCornerShape(9.dp))
-                                    .background(customBg)
-                                    .border(1.dp, customBorder, RoundedCornerShape(9.dp))
-                                    .clickable {
-                                        isCustomTimeSelected = true
-                                        if (timeLimitMinutes in StandardTimeLimits) {
-                                            onTimeLimitMinutesChanged(60)
-                                        }
-                                    }
-                                    .padding(vertical = 7.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = "Custom",
-                                    color = customText,
-                                    fontSize = 11.5.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                        }
-
-                        // Below: Option to select custom time (Stepper + Fast chips)
-                        AnimatedVisibility(visible = isCustomTimeSelected) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 4.dp)
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .background(InputContainerBg)
-                                    .border(1.dp, InputBorderColor, RoundedCornerShape(12.dp))
-                                    .padding(horizontal = 11.dp, vertical = 9.dp),
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = "Select Custom Duration",
-                                        color = if (isDark) Color(0xFF93C5FD) else Color(0xFF2563EB),
-                                        fontSize = 11.5.sp,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
-                                    Text(
-                                        text = "1 – 180 min",
-                                        color = QuizBuilderTextMuted,
-                                        fontSize = 10.5.sp
-                                    )
-                                }
-
-                                // Stepper Controls
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    // -5m Button
-                                    Box(
-                                        modifier = Modifier
-                                            .size(34.dp)
-                                            .clip(RoundedCornerShape(8.dp))
-                                            .background(if (isDark) Color(0xFF0F1A42) else Color(0xFFE2E8F0))
-                                            .border(1.dp, InputBorderColor, RoundedCornerShape(8.dp))
-                                            .clickable {
-                                                val newVal = (timeLimitMinutes - 5).coerceIn(1, 180)
-                                                onTimeLimitMinutesChanged(newVal)
-                                            },
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text("-5m", color = QuizBuilderTextPrimary, fontSize = 10.5.sp, fontWeight = FontWeight.Bold)
-                                    }
-
-                                    // -1m Button
-                                    Box(
-                                        modifier = Modifier
-                                            .size(34.dp)
-                                            .clip(RoundedCornerShape(8.dp))
-                                            .background(if (isDark) Color(0xFF0F1A42) else Color(0xFFE2E8F0))
-                                            .border(1.dp, InputBorderColor, RoundedCornerShape(8.dp))
-                                            .clickable {
-                                                val newVal = (timeLimitMinutes - 1).coerceIn(1, 180)
-                                                onTimeLimitMinutesChanged(newVal)
-                                            },
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text("-1", color = QuizBuilderTextPrimary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                                    }
-
-                                    // Center readout
-                                    Box(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .height(34.dp)
-                                            .clip(RoundedCornerShape(8.dp))
-                                            .background(InputContainerBg)
-                                            .border(1.dp, Color(0xFF3B82F6), RoundedCornerShape(8.dp)),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Row(verticalAlignment = Alignment.CenterVertically) {
-                                            Text(
-                                                text = "$timeLimitMinutes",
-                                                color = QuizBuilderTextPrimary,
-                                                fontSize = 15.sp,
-                                                fontWeight = FontWeight.Bold
-                                            )
-                                            Spacer(modifier = Modifier.width(4.dp))
-                                            Text(
-                                                text = "min",
-                                                color = QuizBuilderTextSecondary,
-                                                fontSize = 11.5.sp
-                                            )
-                                        }
-                                    }
-
-                                    // +1m Button
-                                    Box(
-                                        modifier = Modifier
-                                            .size(34.dp)
-                                            .clip(RoundedCornerShape(8.dp))
-                                            .background(if (isDark) Color(0xFF0F1A42) else Color(0xFFE2E8F0))
-                                            .border(1.dp, InputBorderColor, RoundedCornerShape(8.dp))
-                                            .clickable {
-                                                val newVal = (timeLimitMinutes + 1).coerceIn(1, 180)
-                                                onTimeLimitMinutesChanged(newVal)
-                                            },
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text("+1", color = QuizBuilderTextPrimary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                                    }
-
-                                    // +5m Button
-                                    Box(
-                                        modifier = Modifier
-                                            .size(34.dp)
-                                            .clip(RoundedCornerShape(8.dp))
-                                            .background(if (isDark) Color(0xFF0F1A42) else Color(0xFFE2E8F0))
-                                            .border(1.dp, InputBorderColor, RoundedCornerShape(8.dp))
-                                            .clickable {
-                                                val newVal = (timeLimitMinutes + 5).coerceIn(1, 180)
-                                                onTimeLimitMinutesChanged(newVal)
-                                            },
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text("+5m", color = QuizBuilderTextPrimary, fontSize = 10.5.sp, fontWeight = FontWeight.Bold)
-                                    }
-                                }
-
-                                // Quick chips: 60m, 90m, 120m
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                                ) {
-                                    listOf(60 to "60m (1 hr)", 90 to "90m (1.5 hr)", 120 to "120m (2 hr)").forEach { (presetVal, label) ->
-                                        val isCurrent = timeLimitMinutes == presetVal
-                                        Box(
-                                            modifier = Modifier
-                                                .weight(1f)
-                                                .clip(RoundedCornerShape(7.dp))
-                                                .background(if (isCurrent) Color(0xFF4338CA) else (if (isDark) Color(0xFF0C1438) else Color(0xFFF1F5F9)))
-                                                .border(1.dp, if (isCurrent) Color(0xFF818CF8) else (if (isDark) Color(0xFF1B2A60) else Color(0xFFE2E8F0)), RoundedCornerShape(7.dp))
-                                                .clickable { onTimeLimitMinutesChanged(presetVal) }
-                                                .padding(vertical = 5.dp),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            Text(
-                                                text = label,
-                                                color = if (isCurrent) Color.White else QuizBuilderTextSecondary,
-                                                fontSize = 10.5.sp,
-                                                fontWeight = FontWeight.Medium
-                                            )
-                                        }
-                                    }
-                                }
-                            }
                         }
                     }
                 }

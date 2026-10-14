@@ -50,6 +50,12 @@ class AuthRepositoryImpl private constructor() : AuthRepository {
 
     private fun getUserDbKey(email: String, role: UserRole): String = "${email.trim().lowercase()}_${role.name}"
 
+    private fun hashPassword(password: String): String {
+        val digest = java.security.MessageDigest.getInstance("SHA-256")
+        val bytes = digest.digest(password.toByteArray(Charsets.UTF_8))
+        return bytes.joinToString("") { "%02x".format(it) }
+    }
+
     private val _currentUser = MutableStateFlow<User?>(null)
     override val currentUser: StateFlow<User?> = _currentUser.asStateFlow()
 
@@ -227,7 +233,7 @@ class AuthRepositoryImpl private constructor() : AuthRepository {
                     _currentUser.value = user
                     AuthSessionManager.saveUser(user)
                     val localKey = getUserDbKey(trimmedEmail, role)
-                    userDatabase[localKey] = Pair(user, password)
+                    userDatabase[localKey] = Pair(user, hashPassword(password))
                     return@withLock Result.success(user)
                 } catch (e: FirebaseAuthException) {
                     return@withLock Result.failure(IllegalArgumentException(getFriendlyAuthErrorMessage(e)))
@@ -243,7 +249,7 @@ class AuthRepositoryImpl private constructor() : AuthRepository {
                 return@withLock Result.failure(IllegalArgumentException("Account not found for ${role.label}. Please register first."))
             }
 
-            if (userRecord.second != password) {
+            if (userRecord.second != hashPassword(password)) {
                 return@withLock Result.failure(IllegalArgumentException("Incorrect password. Please try again."))
             }
 
@@ -315,7 +321,7 @@ class AuthRepositoryImpl private constructor() : AuthRepository {
                     )
 
                     saveUserToFirestore(newUser)
-                    userDatabase[localKey] = Pair(newUser, password)
+                    userDatabase[localKey] = Pair(newUser, hashPassword(password))
                     _currentUser.value = newUser
                     AuthSessionManager.saveUser(newUser)
 
@@ -336,7 +342,7 @@ class AuthRepositoryImpl private constructor() : AuthRepository {
                 authProvider = "email",
                 isOnboardingCompleted = false
             )
-            userDatabase[localKey] = Pair(fallbackUser, password)
+            userDatabase[localKey] = Pair(fallbackUser, hashPassword(password))
             _currentUser.value = fallbackUser
             AuthSessionManager.saveUser(fallbackUser)
             Result.success(fallbackUser)

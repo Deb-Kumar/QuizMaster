@@ -20,3 +20,4 @@ captures
 *.aab
 google-services.json
 app/google-services.json
+.firebase/

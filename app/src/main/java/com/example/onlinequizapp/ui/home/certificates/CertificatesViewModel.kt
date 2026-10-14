@@ -78,10 +78,10 @@ class CertificatesViewModel : ViewModel() {
                 val accessibleQuizzes = quizRepository.getAccessibleQuizzesForStudent(studentId)
                 val quizMap = accessibleQuizzes.associateBy { it.id }
 
-                // 3. Process Earned Certificates (score >= 80%)
+                // 3. Process Earned Certificates (strictly score > 80% as per Rule 2)
                 // Group by quizId to take the student's best score for that quiz
                 val certifiedResults = userResults
-                    .filter { it.scorePercentage >= 80 }
+                    .filter { it.scorePercentage > 80 }
                     .groupBy { it.quizId }
                     .mapValues { entry -> entry.value.maxByOrNull { it.scorePercentage }!! }
                     .values

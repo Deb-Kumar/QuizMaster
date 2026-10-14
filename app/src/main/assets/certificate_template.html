@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuizMaster - Certificate of Achievement (4K Quality)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Great+Vibes&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #0B1120;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      padding: 20px;
+    }
+
+    /* Standard A4 Landscape Aspect Ratio ~ 1.414:1 */
+    .certificate-container {
+      position: relative;
+      width: 1024px;
+      height: 724px;
+      background: #FAFAF7;
+      background-image: url('certificate_template.png');
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+
+    /* Dynamic Layer Over Master Template */
+    .dynamic-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    /* Student Name (Uplifted 1 to 2 dp) */
+    .student-name {
+      position: absolute;
+      top: 236px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 760px;
+      text-align: center;
+      font-family: 'Great Vibes', cursive;
+      font-size: 68px;
+      color: #0F1D3D;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    /* Quiz Name (Font increased by 2 dp to 27px) */
+    .quiz-title {
+      position: absolute;
+      top: 326px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 650px;
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+      font-size: 27px;
+      font-weight: 700;
+      color: #3B1EB4;
+      line-height: 1.2;
+    }
+
+    /* Score Inside Laurel Capsule (Uplifted 2 dp to 417px) */
+    .score-badge {
+      position: absolute;
+      top: 417px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Poppins', sans-serif;
+      font-size: 43px;
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1;
+      letter-spacing: -0.5px;
+    }
+
+    /* Lower Metadata Row Values */
+    .meta-value {
+      position: absolute;
+      top: 520px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #0F1D3D;
+      line-height: 1.2;
+    }
+
+    .meta-category {
+      left: 249px;
+    }
+
+    .meta-date {
+      left: 466px;
+    }
+
+    .meta-cert-id {
+      left: 705px;
+      font-family: 'Poppins', monospace;
+      font-size: 15px;
+    }
+
+    /* Authorized Signature (Deb - Kumar) */
+    .signature-container {
+      position: absolute;
+      bottom: 107px;
+      left: 159px;
+      width: 190px;
+      height: 48px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .signature-image {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    /* Real QR Verification Code */
+    .qr-container {
+      position: absolute;
+      bottom: 103px;
+      right: 64px;
+      width: 48px;
+      height: 48px;
+      background: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+    }
+
+    .qr-image {
+      width: 44px;
+      height: 44px;
+      image-rendering: pixelated;
+    }
+
+    @media print {
+      body {
+        background: transparent;
+        padding: 0;
+      }
+      .certificate-container {
+        box-shadow: none;
+        width: 100%;
+        height: 100%;
+        page-break-inside: avoid;
+      }
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="certificate-container">
+    <div class="dynamic-layer">
+      <!-- 1. Student Name (Uplifted 1-2 dp) -->
+      <div class="student-name">{{student_name}}</div>
+
+      <!-- 2. Quiz Title (Enlarged 2 dp) -->
+      <div class="quiz-title">{{quiz_name}}</div>
+
+      <!-- 3. Quiz Score Inside Laurel Capsule (Uplifted 2 dp) -->
+      <div class="score-badge">{{score_percentage}}%</div>
+
+      <!-- 4. Category -->
+      <div class="meta-value meta-category">{{category}}</div>
+
+      <!-- 5. Completion Date -->
+      <div class="meta-value meta-date">{{completion_date}}</div>
+
+      <!-- 6. Certificate ID -->
+      <div class="meta-value meta-cert-id">{{certificate_id}}</div>
+
+      <!-- 7. Authorized Signature -->
+      <div class="signature-container">
+        <img class="signature-image" src="{{authorized_signature_url}}" alt="Authorized Signature">
+      </div>
+
+      <!-- 8. Verification QR Code -->
+      <div class="qr-container">
+        <img class="qr-image" src="{{qr_code_url}}" alt="Verification QR Code">
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <external-files-path name="external_files" path="." />
-    <files-path name="internal_files" path="." />
+    <!-- Scoped access for QuizMaster certificate generation and sharing -->
+    <external-files-path name="quizmaster_certificates" path="QuizMaster Certificates" />
+    <files-path name="internal_certificates" path="QuizMaster Certificates" />
+    <cache-path name="cache" path="." />
 </paths>

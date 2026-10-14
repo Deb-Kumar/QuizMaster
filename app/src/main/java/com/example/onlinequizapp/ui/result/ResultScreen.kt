@@ -415,7 +415,7 @@ fun ResultScreen(
                 (correctCount.toDouble() / totalQuestions.toDouble()) * 100.0
             } else 0.0
 
-            if (scorePercentage >= 80.0) {
+            if (com.example.onlinequizapp.util.CertificateGenerator.isEligible(scorePercentage)) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),

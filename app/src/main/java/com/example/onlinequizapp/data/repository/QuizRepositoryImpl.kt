@@ -310,7 +310,7 @@ class QuizRepositoryImpl private constructor() : QuizRepository {
         if (results.isNotEmpty()) {
             val totalTaken = results.size
             val avg = results.map { it.scorePercentage }.average().toInt()
-            val certs = results.count { it.scorePercentage >= 80 }
+            val certs = results.count { it.scorePercentage > 80 }
             val streak = calculateDayStreak(results.map { it.submittedAtMillis })
             val perfect = results.any { it.scorePercentage >= 100 }
             return UserStats(
@@ -334,7 +334,7 @@ class QuizRepositoryImpl private constructor() : QuizRepository {
                 )
             } else {
                 val avg = completedSessions.values.map { it.scorePercentage }.average().toInt()
-                val certs = completedSessions.values.count { it.scorePercentage >= 80f }
+                val certs = completedSessions.values.count { it.scorePercentage > 80f }
                 val streak = calculateDayStreak(completedSessionDates.values.toList())
                 val perfect = completedSessions.values.any { it.scorePercentage >= 100 }
                 UserStats(
