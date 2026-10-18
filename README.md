@@ -228,5 +228,18 @@ Contributions, issues, and feature requests are welcome!
 Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for more information.
 
 <div align="center">
-  <sub>Engineered with precision for modern education. Maintained by <a href="https://github.com/Deb-Kumar">Deb Kumar</a>.</sub>
+  <br />
+  <a href="https://github.com/Deb-Kumar">
+    <img src="https://img.shields.io/badge/GitHub-Deb--Kumar-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
+  </a>
+  &nbsp;
+  <a href="https://instagram.com/alexx__285">
+    <img src="https://img.shields.io/badge/Instagram-alexx____285-E4405F?style=for-the-badge&logo=instagram&logoColor=white" alt="Instagram" />
+  </a>
+  &nbsp;
+  <a href="mailto:debkumarpayra32@gmail.com">
+    <img src="https://img.shields.io/badge/Email-Contact%20Me-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
+  </a>
+  <br /><br />
+  <sub>Engineered with precision for modern education. Maintained by <a href="https://github.com/Deb-Kumar"><b>Deb Kumar</b></a>.</sub>
 </div>
