@@ -1014,20 +1014,41 @@ class QuizRepositoryImpl private constructor() : QuizRepository {
     }
 
     override suspend fun getQuizResultsForTeacher(teacherId: String): List<QuizResult> {
-        val teacherQuizIds = getQuizzesByTeacher(teacherId).map { it.id }.toSet()
+        val teacherQuizzes = getQuizzesByTeacher(teacherId)
+        val teacherQuizIds = teacherQuizzes.map { it.id }.toSet()
         val db = firestore
-        if (db != null) {
+        val remoteResults = if (db != null) {
             try {
                 val snapshot = db.collection(COLLECTION_QUIZ_RESULTS)
                     .whereEqualTo("teacherId", teacherId)
                     .get()
                     .await()
-                val results = snapshot.documents.mapNotNull { parseQuizResultFromFirestore(it.data) }
-                    .sortedByDescending { it.submittedAtMillis }
-                if (results.isNotEmpty()) return results
-            } catch (_: Exception) {}
+                snapshot.documents.mapNotNull { parseQuizResultFromFirestore(it.data) }
+            } catch (_: Exception) {
+                emptyList()
+            }
+        } else {
+            emptyList()
         }
-        return mutex.withLock {
+
+        // Also query remote results per quizId in case teacherId in quiz_results was unset/defaulted
+        val remotePerQuizResults = if (db != null && remoteResults.isEmpty() && teacherQuizIds.isNotEmpty()) {
+            val list = mutableListOf<QuizResult>()
+            for (qId in teacherQuizIds) {
+                try {
+                    val snap = db.collection(COLLECTION_QUIZ_RESULTS)
+                        .whereEqualTo("quizId", qId)
+                        .get()
+                        .await()
+                    list.addAll(snap.documents.mapNotNull { parseQuizResultFromFirestore(it.data) })
+                } catch (_: Exception) {}
+            }
+            list
+        } else {
+            emptyList()
+        }
+
+        val inMemoryResults = mutex.withLock {
             completedSessions.values
                 .filter { it.quiz.teacherId == teacherId || it.quiz.id in teacherQuizIds }
                 .map { session ->
@@ -1037,6 +1058,16 @@ class QuizRepositoryImpl private constructor() : QuizRepository {
                     session.toQuizResult(userId = userId, userName = userName, submittedAtMillis = submittedTime)
                 }
         }
+
+        // Also inspect local disk results across all teacher's quizzes
+        val localDiskResults = mutableListOf<QuizResult>()
+        for (q in teacherQuizzes) {
+            localDiskResults.addAll(QuizResultStorageManager.getAllSavedResultsForQuiz(q.id, q))
+        }
+
+        return (remoteResults + remotePerQuizResults + inMemoryResults + localDiskResults)
+            .distinctBy { "${it.userId}_${it.quizId}_${it.submittedAtMillis}" }
+            .sortedByDescending { it.submittedAtMillis }
     }
 
     override suspend fun getLocalQuizResults(userId: String): List<QuizResult> {

@@ -113,12 +113,28 @@ class TeacherAnalyticsViewModel(
                 emptyList()
             }
 
+            // Immediately post loaded quizzes and results before waiting on batches stream
+            _uiState.update { current ->
+                current.copy(
+                    teacherUser = currentUser,
+                    allQuizzes = teacherQuizzes,
+                    allResults = teacherResults,
+                    isLoading = false
+                )
+            }
+            recalculateAnalytics()
+
             batchRepository.getBatchesByTeacher(teacherId).collect { batchesList ->
+                val refreshedResults = if (teacherId.isNotBlank()) {
+                    quizRepository.getQuizResultsForTeacher(teacherId)
+                } else {
+                    emptyList()
+                }
                 _uiState.update { current ->
                     current.copy(
                         teacherUser = currentUser,
                         allQuizzes = teacherQuizzes,
-                        allResults = teacherResults,
+                        allResults = refreshedResults,
                         batches = batchesList,
                         isLoading = false
                     )

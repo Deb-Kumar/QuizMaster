@@ -61,7 +61,6 @@ fun TeacherDashboardScreen(
 
     // Dialog state holders for Quick Actions & Notifications
     var showStudentsDialog by remember { mutableStateOf(false) }
-    var showAnalyticsDialog by remember { mutableStateOf(false) }
     var showCertificatesDialog by remember { mutableStateOf(false) }
     var showNotificationsDialog by remember { mutableStateOf(false) }
     var showJoinRequestsDialog by remember { mutableStateOf(false) }
@@ -129,14 +128,6 @@ fun TeacherDashboardScreen(
         TeacherStudentsDialog(
             submissions = uiState.submissions,
             onDismiss = { showStudentsDialog = false }
-        )
-    }
-
-    if (showAnalyticsDialog) {
-        TeacherAnalyticsDialog(
-            quizzes = uiState.quizzes,
-            submissions = uiState.submissions,
-            onDismiss = { showAnalyticsDialog = false }
         )
     }
 
