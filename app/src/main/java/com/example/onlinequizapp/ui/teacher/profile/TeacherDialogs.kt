@@ -1,5 +1,6 @@
 package com.example.onlinequizapp.ui.teacher.profile
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -44,6 +45,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -211,6 +214,13 @@ internal fun TeacherSettingsDialog(
     var deepSeekKey by remember { mutableStateOf(AiConfigManager.getDeepSeekKey()) }
     var agentRouterKey by remember { mutableStateOf(AiConfigManager.getAgentRouterKey()) }
 
+    var openAiEnabled by remember { mutableStateOf(AiConfigManager.isOpenAiEnabled()) }
+    var geminiEnabled by remember { mutableStateOf(AiConfigManager.isGeminiEnabled()) }
+    var openRouterEnabled by remember { mutableStateOf(AiConfigManager.isOpenRouterEnabled()) }
+    var claudeEnabled by remember { mutableStateOf(AiConfigManager.isClaudeEnabled()) }
+    var deepSeekEnabled by remember { mutableStateOf(AiConfigManager.isDeepSeekEnabled()) }
+    var agentRouterEnabled by remember { mutableStateOf(AiConfigManager.isAgentRouterEnabled()) }
+
     var showOpenAiKey by remember { mutableStateOf(false) }
     var showGeminiKey by remember { mutableStateOf(false) }
     var showOpenRouterKey by remember { mutableStateOf(false) }
@@ -355,153 +365,165 @@ internal fun TeacherSettingsDialog(
 
                     // 1. OpenAI Key
                     ApiKeyInputField(
-                    title = "OpenAI API Key",
-                    subtitle = "For GPT-4o-mini & GPT-3.5 Free Tier models",
-                    tag = "OpenAI",
-                    tagColor = if (isDark) Color(0xFF10A37F) else Color(0xFF059669),
-                    value = openAiKey,
-                    isPasswordVisible = showOpenAiKey,
-                    isDark = isDark,
-                    cardBg = cardBg,
-                    cardBorder = cardBorder,
-                    textPrimary = textPrimary,
-                    textSecondary = textSecondary,
-                    dialogBg = dialogBg,
-                    onValueChange = { openAiKey = it },
-                    onToggleVisibility = { showOpenAiKey = !showOpenAiKey },
-                    onClear = {
-                        openAiKey = ""
-                        AiConfigManager.setOpenAiKey("")
-                    },
-                    onConnect = {
-                        AiConnectionTester.testOpenAi(openAiKey)
-                    }
-                )
+                        title = "OpenAI API Key",
+                        subtitle = "For GPT-4o-mini & GPT-3.5 Free Tier models",
+                        tag = "OpenAI",
+                        tagColor = if (isDark) Color(0xFF10A37F) else Color(0xFF059669),
+                        isEnabled = openAiEnabled,
+                        onToggleEnabled = { openAiEnabled = it },
+                        value = openAiKey,
+                        isPasswordVisible = showOpenAiKey,
+                        isDark = isDark,
+                        cardBg = cardBg,
+                        cardBorder = cardBorder,
+                        textPrimary = textPrimary,
+                        textSecondary = textSecondary,
+                        dialogBg = dialogBg,
+                        onValueChange = { openAiKey = it },
+                        onToggleVisibility = { showOpenAiKey = !showOpenAiKey },
+                        onClear = {
+                            openAiKey = ""
+                            AiConfigManager.setOpenAiKey("")
+                        },
+                        onConnect = {
+                            AiConnectionTester.testOpenAi(openAiKey)
+                        }
+                    )
 
-                // 2. Google Gemini Key
-                ApiKeyInputField(
-                    title = "Google Gemini API Key",
-                    subtitle = "For Gemini 2.0 Flash, 2.5 & Pro models",
-                    tag = "Gemini",
-                    tagColor = if (isDark) Color(0xFF38BDF8) else Color(0xFF0284C7),
-                    value = geminiKey,
-                    isPasswordVisible = showGeminiKey,
-                    isDark = isDark,
-                    cardBg = cardBg,
-                    cardBorder = cardBorder,
-                    textPrimary = textPrimary,
-                    textSecondary = textSecondary,
-                    dialogBg = dialogBg,
-                    onValueChange = { geminiKey = it },
-                    onToggleVisibility = { showGeminiKey = !showGeminiKey },
-                    onClear = {
-                        geminiKey = ""
-                        AiConfigManager.setGeminiKey("")
-                    },
-                    onConnect = {
-                        AiConnectionTester.testGemini(geminiKey)
-                    }
-                )
+                    // 2. Google Gemini Key
+                    ApiKeyInputField(
+                        title = "Google Gemini API Key",
+                        subtitle = "For Gemini 2.0 Flash, 2.5 & Pro models",
+                        tag = "Gemini",
+                        tagColor = if (isDark) Color(0xFF38BDF8) else Color(0xFF0284C7),
+                        isEnabled = geminiEnabled,
+                        onToggleEnabled = { geminiEnabled = it },
+                        value = geminiKey,
+                        isPasswordVisible = showGeminiKey,
+                        isDark = isDark,
+                        cardBg = cardBg,
+                        cardBorder = cardBorder,
+                        textPrimary = textPrimary,
+                        textSecondary = textSecondary,
+                        dialogBg = dialogBg,
+                        onValueChange = { geminiKey = it },
+                        onToggleVisibility = { showGeminiKey = !showGeminiKey },
+                        onClear = {
+                            geminiKey = ""
+                            AiConfigManager.setGeminiKey("")
+                        },
+                        onConnect = {
+                            AiConnectionTester.testGemini(geminiKey)
+                        }
+                    )
 
-                // 3. OpenRouter Key (Free Tier Models)
-                ApiKeyInputField(
-                    title = "OpenRouter API Key",
-                    subtitle = "For NVIDIA Nemotron 3 Ultra & Free models",
-                    tag = "OpenRouter",
-                    tagColor = if (isDark) Color(0xFF818CF8) else Color(0xFF6366F1),
-                    value = openRouterKey,
-                    isPasswordVisible = showOpenRouterKey,
-                    isDark = isDark,
-                    cardBg = cardBg,
-                    cardBorder = cardBorder,
-                    textPrimary = textPrimary,
-                    textSecondary = textSecondary,
-                    dialogBg = dialogBg,
-                    onValueChange = { openRouterKey = it },
-                    onToggleVisibility = { showOpenRouterKey = !showOpenRouterKey },
-                    onClear = {
-                        openRouterKey = ""
-                        AiConfigManager.setOpenRouterKey("")
-                    },
-                    onConnect = {
-                        AiConnectionTester.testOpenRouter(openRouterKey)
-                    }
-                )
+                    // 3. OpenRouter Key (Free Tier Models)
+                    ApiKeyInputField(
+                        title = "OpenRouter API Key",
+                        subtitle = "For NVIDIA Nemotron 3 Ultra & Free models",
+                        tag = "OpenRouter",
+                        tagColor = if (isDark) Color(0xFF818CF8) else Color(0xFF6366F1),
+                        isEnabled = openRouterEnabled,
+                        onToggleEnabled = { openRouterEnabled = it },
+                        value = openRouterKey,
+                        isPasswordVisible = showOpenRouterKey,
+                        isDark = isDark,
+                        cardBg = cardBg,
+                        cardBorder = cardBorder,
+                        textPrimary = textPrimary,
+                        textSecondary = textSecondary,
+                        dialogBg = dialogBg,
+                        onValueChange = { openRouterKey = it },
+                        onToggleVisibility = { showOpenRouterKey = !showOpenRouterKey },
+                        onClear = {
+                            openRouterKey = ""
+                            AiConfigManager.setOpenRouterKey("")
+                        },
+                        onConnect = {
+                            AiConnectionTester.testOpenRouter(openRouterKey)
+                        }
+                    )
 
-                // 4. Anthropic Claude Key
-                ApiKeyInputField(
-                    title = "Anthropic Claude API Key",
-                    subtitle = "For Claude 3.5 Haiku & 3.5 Sonnet",
-                    tag = "Claude",
-                    tagColor = if (isDark) Color(0xFFF59E0B) else Color(0xFFD97706),
-                    value = claudeKey,
-                    isPasswordVisible = showClaudeKey,
-                    isDark = isDark,
-                    cardBg = cardBg,
-                    cardBorder = cardBorder,
-                    textPrimary = textPrimary,
-                    textSecondary = textSecondary,
-                    dialogBg = dialogBg,
-                    onValueChange = { claudeKey = it },
-                    onToggleVisibility = { showClaudeKey = !showClaudeKey },
-                    onClear = {
-                        claudeKey = ""
-                        AiConfigManager.setClaudeKey("")
-                    },
-                    onConnect = {
-                        AiConnectionTester.testClaude(claudeKey)
-                    }
-                )
+                    // 4. Anthropic Claude Key
+                    ApiKeyInputField(
+                        title = "Anthropic Claude API Key",
+                        subtitle = "For Claude 3.5 Haiku & 3.5 Sonnet",
+                        tag = "Claude",
+                        tagColor = if (isDark) Color(0xFFF59E0B) else Color(0xFFD97706),
+                        isEnabled = claudeEnabled,
+                        onToggleEnabled = { claudeEnabled = it },
+                        value = claudeKey,
+                        isPasswordVisible = showClaudeKey,
+                        isDark = isDark,
+                        cardBg = cardBg,
+                        cardBorder = cardBorder,
+                        textPrimary = textPrimary,
+                        textSecondary = textSecondary,
+                        dialogBg = dialogBg,
+                        onValueChange = { claudeKey = it },
+                        onToggleVisibility = { showClaudeKey = !showClaudeKey },
+                        onClear = {
+                            claudeKey = ""
+                            AiConfigManager.setClaudeKey("")
+                        },
+                        onConnect = {
+                            AiConnectionTester.testClaude(claudeKey)
+                        }
+                    )
 
-                // 5. DeepSeek Key
-                ApiKeyInputField(
-                    title = "DeepSeek API Key",
-                    subtitle = "For DeepSeek-V3 & DeepSeek-R1 models",
-                    tag = "DeepSeek",
-                    tagColor = if (isDark) Color(0xFF38BDF8) else Color(0xFF0284C7),
-                    value = deepSeekKey,
-                    isPasswordVisible = showDeepSeekKey,
-                    isDark = isDark,
-                    cardBg = cardBg,
-                    cardBorder = cardBorder,
-                    textPrimary = textPrimary,
-                    textSecondary = textSecondary,
-                    dialogBg = dialogBg,
-                    onValueChange = { deepSeekKey = it },
-                    onToggleVisibility = { showDeepSeekKey = !showDeepSeekKey },
-                    onClear = {
-                        deepSeekKey = ""
-                        AiConfigManager.setDeepSeekKey("")
-                    },
-                    onConnect = {
-                        AiConnectionTester.testDeepSeek(deepSeekKey)
-                    }
-                )
+                    // 5. DeepSeek Key
+                    ApiKeyInputField(
+                        title = "DeepSeek API Key",
+                        subtitle = "For DeepSeek-V3 & DeepSeek-R1 models",
+                        tag = "DeepSeek",
+                        tagColor = if (isDark) Color(0xFF38BDF8) else Color(0xFF0284C7),
+                        isEnabled = deepSeekEnabled,
+                        onToggleEnabled = { deepSeekEnabled = it },
+                        value = deepSeekKey,
+                        isPasswordVisible = showDeepSeekKey,
+                        isDark = isDark,
+                        cardBg = cardBg,
+                        cardBorder = cardBorder,
+                        textPrimary = textPrimary,
+                        textSecondary = textSecondary,
+                        dialogBg = dialogBg,
+                        onValueChange = { deepSeekKey = it },
+                        onToggleVisibility = { showDeepSeekKey = !showDeepSeekKey },
+                        onClear = {
+                            deepSeekKey = ""
+                            AiConfigManager.setDeepSeekKey("")
+                        },
+                        onConnect = {
+                            AiConnectionTester.testDeepSeek(deepSeekKey)
+                        }
+                    )
 
-                // 6. AgentRouter Key
-                ApiKeyInputField(
-                    title = "AgentRouter API Key",
-                    subtitle = "For DeepSeek-V4-Flash, GPT-6-Astra, Claude-Opus-4/5",
-                    tag = "AgentRouter",
-                    tagColor = if (isDark) Color(0xFF818CF8) else Color(0xFF4F46E5),
-                    value = agentRouterKey,
-                    isPasswordVisible = showAgentRouterKey,
-                    isDark = isDark,
-                    cardBg = cardBg,
-                    cardBorder = cardBorder,
-                    textPrimary = textPrimary,
-                    textSecondary = textSecondary,
-                    dialogBg = dialogBg,
-                    onValueChange = { agentRouterKey = it },
-                    onToggleVisibility = { showAgentRouterKey = !showAgentRouterKey },
-                    onClear = {
-                        agentRouterKey = ""
-                        AiConfigManager.setAgentRouterKey("")
-                    },
-                    onConnect = {
-                        AiConnectionTester.testAgentRouter(agentRouterKey)
-                    }
-                )
+                    // 6. AgentRouter Key
+                    ApiKeyInputField(
+                        title = "AgentRouter API Key",
+                        subtitle = "For DeepSeek-V4-Flash, GPT-6-Astra, Claude-Opus-4/5",
+                        tag = "AgentRouter",
+                        tagColor = if (isDark) Color(0xFF818CF8) else Color(0xFF4F46E5),
+                        isEnabled = agentRouterEnabled,
+                        onToggleEnabled = { agentRouterEnabled = it },
+                        value = agentRouterKey,
+                        isPasswordVisible = showAgentRouterKey,
+                        isDark = isDark,
+                        cardBg = cardBg,
+                        cardBorder = cardBorder,
+                        textPrimary = textPrimary,
+                        textSecondary = textSecondary,
+                        dialogBg = dialogBg,
+                        onValueChange = { agentRouterKey = it },
+                        onToggleVisibility = { showAgentRouterKey = !showAgentRouterKey },
+                        onClear = {
+                            agentRouterKey = ""
+                            AiConfigManager.setAgentRouterKey("")
+                        },
+                        onConnect = {
+                            AiConnectionTester.testAgentRouter(agentRouterKey)
+                        }
+                    )
 
                     Spacer(modifier = Modifier.height(8.dp))
                 }
@@ -537,7 +559,13 @@ internal fun TeacherSettingsDialog(
                                 deepSeek = deepSeekKey,
                                 agentRouter = agentRouterKey
                             )
-                            context.showToast("API keys saved successfully! 🔑")
+                            AiConfigManager.setOpenAiEnabled(openAiEnabled)
+                            AiConfigManager.setGeminiEnabled(geminiEnabled)
+                            AiConfigManager.setOpenRouterEnabled(openRouterEnabled)
+                            AiConfigManager.setClaudeEnabled(claudeEnabled)
+                            AiConfigManager.setDeepSeekEnabled(deepSeekEnabled)
+                            AiConfigManager.setAgentRouterEnabled(agentRouterEnabled)
+                            context.showToast("AI configuration saved successfully! 🔑")
                             onDismiss()
                         },
                         modifier = Modifier.weight(1.3f),
@@ -567,6 +595,8 @@ private fun ApiKeyInputField(
     subtitle: String,
     tag: String,
     tagColor: Color,
+    isEnabled: Boolean,
+    onToggleEnabled: (Boolean) -> Unit,
     value: String,
     isPasswordVisible: Boolean,
     isDark: Boolean,
@@ -594,32 +624,49 @@ private fun ApiKeyInputField(
             .padding(14.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Header Row: Title + Tag badge
+        // Header Row: Title + Tag badge + On/Off Switch
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = title,
-                color = textPrimary,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 13.5.sp
-            )
-
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(tagColor.copy(alpha = if (isDark) 0.2f else 0.12f))
-                    .padding(horizontal = 7.dp, vertical = 2.5.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = tag,
-                    color = tagColor,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 10.5.sp
+                    text = title,
+                    color = textPrimary,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 13.5.sp
                 )
+
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(6.dp))
+                        .background(tagColor.copy(alpha = if (isDark) 0.2f else 0.12f))
+                        .padding(horizontal = 7.dp, vertical = 2.5.dp)
+                ) {
+                    Text(
+                        text = tag,
+                        color = tagColor,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 10.5.sp
+                    )
+                }
             }
+
+            Switch(
+                checked = isEnabled,
+                onCheckedChange = onToggleEnabled,
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color.White,
+                    checkedTrackColor = tagColor,
+                    uncheckedThumbColor = if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B),
+                    uncheckedTrackColor = if (isDark) Color(0xFF1E293B) else Color(0xFFE2E8F0)
+                )
+            )
         }
 
         Text(
@@ -628,251 +675,259 @@ private fun ApiKeyInputField(
             fontSize = 11.5.sp
         )
 
-        // API Key text input field
-        OutlinedTextField(
-            value = value,
-            onValueChange = { input ->
-                onValueChange(input)
-            },
-            placeholder = { Text("Paste your $tag API key...", color = textSecondary.copy(alpha = 0.6f), fontSize = 12.sp) },
-            singleLine = true,
-            visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = {
-                IconButton(onClick = onToggleVisibility) {
-                    Icon(
-                        imageVector = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = "Toggle key visibility",
-                        tint = textSecondary,
-                        modifier = Modifier.size(18.dp)
-                    )
-                }
-            },
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = textPrimary,
-                unfocusedTextColor = textPrimary,
-                focusedContainerColor = if (isDark) dialogBg else Color.White,
-                unfocusedContainerColor = if (isDark) dialogBg else Color.White,
-                focusedBorderColor = if (isDark) Color(0xFF818CF8) else Color(0xFF4F46E5),
-                unfocusedBorderColor = if (isDark) cardBorder else Color(0xFFCBD5E1),
-                cursorColor = if (isDark) Color(0xFF818CF8) else Color(0xFF4F46E5)
-            ),
-            shape = RoundedCornerShape(10.dp),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        // Action Buttons Row: Clear & Connect
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // 1. Clear Button
-            OutlinedButton(
-                onClick = {
-                    onClear()
-                    connectionResult = null
-                    hasAttemptedConnect = false
-                },
-                modifier = Modifier
-                    .weight(1f)
-                    .height(36.dp),
-                shape = RoundedCornerShape(10.dp),
-                border = BorderStroke(1.dp, if (isDark) Color(0xFFEF4444).copy(alpha = 0.45f) else Color(0xFFFCA5A5)),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = Color(0xFFEF4444)
-                ),
-                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Clear",
-                    modifier = Modifier.size(14.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "Clear",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
-
-            // 2. Connect Button
-            Button(
-                onClick = {
-                    hasAttemptedConnect = true
-                    isConnecting = true
-                    coroutineScope.launch {
-                        connectionResult = onConnect()
-                        isConnecting = false
-                    }
-                },
-                enabled = !isConnecting,
-                modifier = Modifier
-                    .weight(1.3f)
-                    .height(36.dp),
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = tagColor,
-                    disabledContainerColor = tagColor.copy(alpha = 0.6f)
-                ),
-                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp)
-            ) {
-                if (isConnecting) {
-                    CircularProgressIndicator(
-                        color = Color.White,
-                        strokeWidth = 2.dp,
-                        modifier = Modifier.size(14.dp)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = "Connecting...",
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Default.Bolt,
-                        contentDescription = "Connect",
-                        tint = Color.White,
-                        modifier = Modifier.size(15.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "Connect",
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-        }
-
-        // Response Text Area (Hidden by default, shown ONLY after user clicks Connect)
-        if (hasAttemptedConnect || isConnecting || connectionResult != null) {
-            val isSuccess = connectionResult?.isSuccess == true
-            val statusColor = when {
-                isConnecting -> Color(0xFF38BDF8)
-                isSuccess -> Color(0xFF10B981)
-                else -> Color(0xFFEF4444)
-            }
-            val containerBg = when {
-                isDark -> Color(0xFF070C22)
-                isConnecting -> Color(0xFFF0F9FF)
-                isSuccess -> Color(0xFFF0FDF4)
-                else -> Color(0xFFFEF2F2)
-            }
-            val borderTint = when {
-                isDark -> statusColor.copy(alpha = 0.4f)
-                isConnecting -> Color(0xFFBAE6FD)
-                isSuccess -> Color(0xFFBBF7D0)
-                else -> Color(0xFFFECACA)
-            }
-
+        // API Key paste option, buttons, and response area only enabled/visible when toggle is ON
+        AnimatedVisibility(visible = isEnabled) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(containerBg)
-                    .border(1.dp, borderTint, RoundedCornerShape(10.dp))
-                    .padding(10.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // Header of Response Area
+                // API Key text input field
+                OutlinedTextField(
+                    value = value,
+                    onValueChange = { input ->
+                        onValueChange(input)
+                    },
+                    placeholder = { Text("Paste your $tag API key...", color = textSecondary.copy(alpha = 0.6f), fontSize = 12.sp) },
+                    singleLine = true,
+                    visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        IconButton(onClick = onToggleVisibility) {
+                            Icon(
+                                imageVector = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                contentDescription = "Toggle key visibility",
+                                tint = textSecondary,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                    },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = textPrimary,
+                        unfocusedTextColor = textPrimary,
+                        focusedContainerColor = if (isDark) dialogBg else Color.White,
+                        unfocusedContainerColor = if (isDark) dialogBg else Color.White,
+                        focusedBorderColor = if (isDark) Color(0xFF818CF8) else Color(0xFF4F46E5),
+                        unfocusedBorderColor = if (isDark) cardBorder else Color(0xFFCBD5E1),
+                        cursorColor = if (isDark) Color(0xFF818CF8) else Color(0xFF4F46E5)
+                    ),
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                // Action Buttons Row: Clear & Connect
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    // 1. Clear Button
+                    OutlinedButton(
+                        onClick = {
+                            onClear()
+                            connectionResult = null
+                            hasAttemptedConnect = false
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(36.dp),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(1.dp, if (isDark) Color(0xFFEF4444).copy(alpha = 0.45f) else Color(0xFFFCA5A5)),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color(0xFFEF4444)
+                        ),
+                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp)
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .size(7.dp)
-                                .clip(CircleShape)
-                                .background(statusColor)
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Clear",
+                            modifier = Modifier.size(14.dp)
                         )
+                        Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = if (isConnecting) "Verifying $tag Connection..." else "AI Response ($tag)",
-                            color = if (isDark) Color(0xFFE2E8F0) else Color(0xFF1E293B),
-                            fontSize = 11.5.sp,
-                            fontWeight = FontWeight.Bold
+                            text = "Clear",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold
                         )
                     }
 
-                    if (!isConnecting && connectionResult != null) {
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(5.dp))
-                                .background(statusColor.copy(alpha = if (isDark) 0.2f else 0.15f))
-                                .padding(horizontal = 6.dp, vertical = 2.dp)
-                        ) {
+                    // 2. Connect Button
+                    Button(
+                        onClick = {
+                            hasAttemptedConnect = true
+                            isConnecting = true
+                            coroutineScope.launch {
+                                connectionResult = onConnect()
+                                isConnecting = false
+                            }
+                        },
+                        enabled = !isConnecting,
+                        modifier = Modifier
+                            .weight(1.3f)
+                            .height(36.dp),
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = tagColor,
+                            disabledContainerColor = tagColor.copy(alpha = 0.6f)
+                        ),
+                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp)
+                    ) {
+                        if (isConnecting) {
+                            CircularProgressIndicator(
+                                color = Color.White,
+                                strokeWidth = 2.dp,
+                                modifier = Modifier.size(14.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = if (isSuccess) "CONNECTED" else "FAILED",
-                                color = statusColor,
-                                fontSize = 9.5.sp,
+                                text = "Connecting...",
+                                color = Color.White,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.Bolt,
+                                contentDescription = "Connect",
+                                tint = Color.White,
+                                modifier = Modifier.size(15.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "Connect",
+                                color = Color.White,
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold
                             )
                         }
                     }
                 }
 
-                // Response Text Area Box
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(if (isDark) Color(0xFF0B1028) else Color.White)
-                        .border(1.dp, if (isDark) Color(0xFF1E293B) else Color(0xFFE2E8F0), RoundedCornerShape(8.dp))
-                        .padding(horizontal = 10.dp, vertical = 8.dp)
-                ) {
-                    if (isConnecting) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(13.dp),
-                                color = statusColor,
-                                strokeWidth = 1.8.dp
-                            )
-                            Text(
-                                text = "Sending ping to $tag servers...",
-                                color = textSecondary,
-                                fontSize = 11.sp,
-                                fontStyle = FontStyle.Italic
-                            )
-                        }
-                    } else {
-                        Text(
-                            text = connectionResult?.aiResponse ?: "No response received.",
-                            color = if (isDark) Color(0xFFE2E8F0) else Color(0xFF334155),
-                            fontSize = 11.5.sp,
-                            lineHeight = 16.sp,
-                            fontFamily = FontFamily.Monospace
-                        )
+                // Response Text Area (Hidden by default, shown ONLY after user clicks Connect)
+                if (hasAttemptedConnect || isConnecting || connectionResult != null) {
+                    val isSuccess = connectionResult?.isSuccess == true
+                    val statusColor = when {
+                        isConnecting -> Color(0xFF38BDF8)
+                        isSuccess -> Color(0xFF10B981)
+                        else -> Color(0xFFEF4444)
                     }
-                }
+                    val containerBg = when {
+                        isDark -> Color(0xFF070C22)
+                        isConnecting -> Color(0xFFF0F9FF)
+                        isSuccess -> Color(0xFFF0FDF4)
+                        else -> Color(0xFFFEF2F2)
+                    }
+                    val borderTint = when {
+                        isDark -> statusColor.copy(alpha = 0.4f)
+                        isConnecting -> Color(0xFFBAE6FD)
+                        isSuccess -> Color(0xFFBBF7D0)
+                        else -> Color(0xFFFECACA)
+                    }
 
-                // Metadata footer
-                if (!isConnecting && connectionResult != null) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(containerBg)
+                            .border(1.dp, borderTint, RoundedCornerShape(10.dp))
+                            .padding(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        Text(
-                            text = connectionResult?.modelName?.let { "Model: $it" } ?: "",
-                            color = textSecondary,
-                            fontSize = 10.sp
-                        )
-                        Text(
-                            text = "Time: ${connectionResult?.timestamp}",
-                            color = textSecondary,
-                            fontSize = 10.sp
-                        )
+                        // Header of Response Area
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(7.dp)
+                                        .clip(CircleShape)
+                                        .background(statusColor)
+                                )
+                                Text(
+                                    text = if (isConnecting) "Verifying $tag Connection..." else "AI Response ($tag)",
+                                    color = if (isDark) Color(0xFFE2E8F0) else Color(0xFF1E293B),
+                                    fontSize = 11.5.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+
+                            if (!isConnecting && connectionResult != null) {
+                                Box(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(5.dp))
+                                        .background(statusColor.copy(alpha = if (isDark) 0.2f else 0.15f))
+                                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                                ) {
+                                    Text(
+                                        text = if (isSuccess) "CONNECTED" else "FAILED",
+                                        color = statusColor,
+                                        fontSize = 9.5.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        }
+
+                        // Response Text Area Box
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(if (isDark) Color(0xFF0B1028) else Color.White)
+                                .border(1.dp, if (isDark) Color(0xFF1E293B) else Color(0xFFE2E8F0), RoundedCornerShape(8.dp))
+                                .padding(horizontal = 10.dp, vertical = 8.dp)
+                        ) {
+                            if (isConnecting) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(13.dp),
+                                        color = statusColor,
+                                        strokeWidth = 1.8.dp
+                                    )
+                                    Text(
+                                        text = "Sending ping to $tag servers...",
+                                        color = textSecondary,
+                                        fontSize = 11.sp,
+                                        fontStyle = FontStyle.Italic
+                                    )
+                                }
+                            } else {
+                                Text(
+                                    text = connectionResult?.aiResponse ?: "No response received.",
+                                    color = if (isDark) Color(0xFFE2E8F0) else Color(0xFF334155),
+                                    fontSize = 11.5.sp,
+                                    lineHeight = 16.sp,
+                                    fontFamily = FontFamily.Monospace
+                                )
+                            }
+                        }
+
+                        // Metadata footer
+                        if (!isConnecting && connectionResult != null) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = connectionResult?.modelName?.let { "Model: $it" } ?: "",
+                                    color = textSecondary,
+                                    fontSize = 10.sp
+                                )
+                                Text(
+                                    text = "Time: ${connectionResult?.timestamp}",
+                                    color = textSecondary,
+                                    fontSize = 10.sp
+                                )
+                            }
+                        }
                     }
                 }
             }

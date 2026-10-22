@@ -25,6 +25,14 @@ object AiConfigManager {
     private const val KEY_AGENTROUTER_KEY = "key_agentrouter_api"
     private const val KEY_AGENTROUTER_MODEL = "key_agentrouter_model"
 
+    // Provider Enabled / Disabled Toggles
+    private const val KEY_OPENAI_ENABLED = "key_openai_enabled"
+    private const val KEY_GEMINI_ENABLED = "key_gemini_enabled"
+    private const val KEY_OPENROUTER_ENABLED = "key_openrouter_enabled"
+    private const val KEY_CLAUDE_ENABLED = "key_claude_enabled"
+    private const val KEY_DEEPSEEK_ENABLED = "key_deepseek_enabled"
+    private const val KEY_AGENTROUTER_ENABLED = "key_agentrouter_enabled"
+
     private var context: Context? = null
     private var prefs: SharedPreferences? = null
 
@@ -101,6 +109,36 @@ object AiConfigManager {
     fun getAgentRouterModel(): String = getPrefs()?.getString(KEY_AGENTROUTER_MODEL, "deepseek-v4-flash") ?: "deepseek-v4-flash"
     fun setAgentRouterModel(model: String) {
         getPrefs()?.edit()?.putString(KEY_AGENTROUTER_MODEL, model.trim())?.apply()
+    }
+
+    fun isOpenAiEnabled(): Boolean = getPrefs()?.getBoolean(KEY_OPENAI_ENABLED, getOpenAiKey().isNotBlank()) ?: false
+    fun setOpenAiEnabled(enabled: Boolean) {
+        getPrefs()?.edit()?.putBoolean(KEY_OPENAI_ENABLED, enabled)?.apply()
+    }
+
+    fun isGeminiEnabled(): Boolean = getPrefs()?.getBoolean(KEY_GEMINI_ENABLED, getGeminiKey().isNotBlank() || true) ?: true
+    fun setGeminiEnabled(enabled: Boolean) {
+        getPrefs()?.edit()?.putBoolean(KEY_GEMINI_ENABLED, enabled)?.apply()
+    }
+
+    fun isOpenRouterEnabled(): Boolean = getPrefs()?.getBoolean(KEY_OPENROUTER_ENABLED, getOpenRouterKey().isNotBlank()) ?: false
+    fun setOpenRouterEnabled(enabled: Boolean) {
+        getPrefs()?.edit()?.putBoolean(KEY_OPENROUTER_ENABLED, enabled)?.apply()
+    }
+
+    fun isClaudeEnabled(): Boolean = getPrefs()?.getBoolean(KEY_CLAUDE_ENABLED, getClaudeKey().isNotBlank()) ?: false
+    fun setClaudeEnabled(enabled: Boolean) {
+        getPrefs()?.edit()?.putBoolean(KEY_CLAUDE_ENABLED, enabled)?.apply()
+    }
+
+    fun isDeepSeekEnabled(): Boolean = getPrefs()?.getBoolean(KEY_DEEPSEEK_ENABLED, getDeepSeekKey().isNotBlank()) ?: false
+    fun setDeepSeekEnabled(enabled: Boolean) {
+        getPrefs()?.edit()?.putBoolean(KEY_DEEPSEEK_ENABLED, enabled)?.apply()
+    }
+
+    fun isAgentRouterEnabled(): Boolean = getPrefs()?.getBoolean(KEY_AGENTROUTER_ENABLED, getAgentRouterKey().isNotBlank()) ?: false
+    fun setAgentRouterEnabled(enabled: Boolean) {
+        getPrefs()?.edit()?.putBoolean(KEY_AGENTROUTER_ENABLED, enabled)?.apply()
     }
 
     fun saveAllKeys(
