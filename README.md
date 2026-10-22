@@ -234,12 +234,12 @@ Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for more informa
   </a>
   &nbsp;
   <a href="https://instagram.com/alexx__285">
-    <img src="https://img.shields.io/badge/Instagram-alexx____285-E4405F?style=for-the-badge&logo=instagram&logoColor=white" alt="Instagram" />
+    <img src="https://img.shields.io/badge/Instagram-alexx__285-E4405F?style=for-the-badge&logo=instagram&logoColor=white" alt="Instagram" />
   </a>
   &nbsp;
   <a href="mailto:debkumarpayra32@gmail.com">
     <img src="https://img.shields.io/badge/Email-Contact%20Me-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
   </a>
   <br /><br />
-  <sub>Engineered with precision for modern education. Maintained by <a href="https://github.com/Deb-Kumar"><b>Deb Kumar</b></a>.</sub>
+  <sub>Engineered with precision for modern education. Maintained by <a href="https://github.com/Deb-Kumar"><b>Deb Kumar</b></a>❤️❤️</sub>
 </div>
