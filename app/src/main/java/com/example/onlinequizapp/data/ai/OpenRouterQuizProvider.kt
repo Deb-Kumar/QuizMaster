@@ -94,7 +94,7 @@ class OpenRouterQuizProvider : AIQuizGenerator {
                     }
                     val errorMsg = try {
                         JSONObject(responseBody).optJSONObject("error")?.optString("message") ?: responseBody
-                    } catch (_: Exception) {
+                    } catch (e: Exception) {
                         responseBody.take(200)
                     }
                     return@withContext Result.failure(Exception("OpenRouter error ($statusCode): $errorMsg"))

@@ -34,6 +34,7 @@ import com.example.onlinequizapp.ui.teacher.components.TeacherBottomNavBar
 import com.example.onlinequizapp.ui.teacher.components.TeacherHomeContent
 import com.example.onlinequizapp.ui.teacher.components.TeacherJoinRequestsDialog
 import com.example.onlinequizapp.ui.home.profile.LogoutConfirmDialog
+import com.example.onlinequizapp.ui.teacher.profile.TeacherAllQuickActionsDialog
 import com.example.onlinequizapp.ui.teacher.profile.TeacherAnalyticsDialog
 import com.example.onlinequizapp.ui.teacher.profile.TeacherCertificatesDialog
 import com.example.onlinequizapp.ui.teacher.profile.TeacherNotificationsDialog
@@ -64,6 +65,7 @@ fun TeacherDashboardScreen(
     var showCertificatesDialog by remember { mutableStateOf(false) }
     var showNotificationsDialog by remember { mutableStateOf(false) }
     var showJoinRequestsDialog by remember { mutableStateOf(false) }
+    var showAllQuickActionsDialog by remember { mutableStateOf(false) }
     var showLogoutDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -153,6 +155,18 @@ fun TeacherDashboardScreen(
         )
     }
 
+    if (showAllQuickActionsDialog) {
+        TeacherAllQuickActionsDialog(
+            onCreateQuizClick = onCreateQuizClick,
+            onManageStudentsClick = { selectedBottomTab = 2 },
+            onViewAnalyticsClick = onViewAnalyticsClick,
+            onCertificatesClick = { showCertificatesDialog = true },
+            onJoinRequestsClick = { showJoinRequestsDialog = true },
+            onNotificationsClick = { showNotificationsDialog = true },
+            onDismiss = { showAllQuickActionsDialog = false }
+        )
+    }
+
     if (showLogoutDialog) {
         LogoutConfirmDialog(
             onDismiss = { showLogoutDialog = false },
@@ -192,6 +206,7 @@ fun TeacherDashboardScreen(
                         onEditQuizClick = onEditQuizClick,
                         onPublishQuizClick = onPublishQuizClick,
                         onViewAllQuizzesClick = { selectedBottomTab = 1 },
+                        onViewAllQuickActionsClick = { showAllQuickActionsDialog = true },
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding)

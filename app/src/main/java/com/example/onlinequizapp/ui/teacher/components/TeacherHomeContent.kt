@@ -95,6 +95,7 @@ internal fun TeacherHomeContent(
     onEditQuizClick: (String) -> Unit = {},
     onPublishQuizClick: (String) -> Unit = onEditQuizClick,
     onViewAllQuizzesClick: () -> Unit = {},
+    onViewAllQuickActionsClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val isDark = isTeacherInDarkTheme()
@@ -533,18 +534,19 @@ internal fun TeacherHomeContent(
                     )
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.clickable { onCreateQuizClick() }
+                        modifier = Modifier.clickable { onViewAllQuickActionsClick() }
                     ) {
+                        val viewAllColor = if (isDark) Color(0xFF38BDF8) else Color(0xFF2563EB)
                         Text(
                             text = "View All",
-                            color = Color(0xFF38BDF8),
+                            color = viewAllColor,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 12.5.sp
                         )
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                             contentDescription = null,
-                            tint = Color(0xFF38BDF8),
+                            tint = viewAllColor,
                             modifier = Modifier.size(16.dp)
                         )
                     }

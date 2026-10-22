@@ -1,5 +1,6 @@
 package com.example.onlinequizapp.ui.teacher.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,13 +25,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.onlinequizapp.R
+import com.example.onlinequizapp.ui.teacher.TeacherCardBg
+import com.example.onlinequizapp.ui.teacher.TeacherCardBorder
 import com.example.onlinequizapp.ui.teacher.TeacherTextMuted
 import com.example.onlinequizapp.ui.teacher.TeacherTextWhite
-import com.example.onlinequizapp.ui.teacher.isTeacherInDarkTheme
 
 // -------------------------------------------------------------
 // Component: Motivation / Performance Card ("Keep Going!")
@@ -40,22 +45,11 @@ internal fun TeacherMotivationCard(
     onViewPerformanceClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val isDark = isTeacherInDarkTheme()
-    val motivationBg = if (isDark) {
-        Brush.verticalGradient(
-            listOf(Color(0xFF0D1742), Color(0xFF080F30))
-        )
-    } else {
-        Brush.verticalGradient(
-            listOf(Color(0xFFEDE9FE), Color(0xFFF3E8FF))
-        )
-    }
-
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(18.dp))
-            .background(motivationBg)
-            .border(1.dp, if (isDark) Color(0xFF1E2B64) else Color(0xFFDDD6FE), RoundedCornerShape(18.dp))
+            .background(TeacherCardBg)
+            .border(1.dp, TeacherCardBorder, RoundedCornerShape(18.dp))
             .padding(14.dp)
     ) {
         Column(
@@ -63,16 +57,13 @@ internal fun TeacherMotivationCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Trophy graphic with sparkles
-            Box(
-                modifier = Modifier.size(54.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "🏆",
-                    fontSize = 38.sp
-                )
-            }
+            // 3D Trophy graphic
+            Image(
+                painter = painterResource(id = R.drawable.ic_trophy_3d),
+                contentDescription = "Achievement Trophy",
+                modifier = Modifier.size(68.dp),
+                contentScale = ContentScale.Fit
+            )
 
             Text(
                 text = "Keep Going!",

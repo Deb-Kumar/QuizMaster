@@ -26,13 +26,19 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.CardMembership
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Key
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.AlertDialog
@@ -60,6 +66,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -1143,5 +1150,189 @@ internal fun TeacherNotificationsDialog(onDismiss: () -> Unit) {
             onBackClick = onDismiss
         )
     }
+}
+
+@Composable
+internal fun TeacherAllQuickActionsDialog(
+    onCreateQuizClick: () -> Unit,
+    onManageStudentsClick: () -> Unit,
+    onViewAnalyticsClick: () -> Unit,
+    onCertificatesClick: () -> Unit,
+    onJoinRequestsClick: () -> Unit,
+    onNotificationsClick: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    val isDark = isTeacherInDarkTheme()
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = TeacherCardBg,
+        title = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFF38BDF8).copy(alpha = 0.15f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Bolt,
+                            contentDescription = null,
+                            tint = Color(0xFF38BDF8),
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "All Quick Actions",
+                        color = TeacherTextWhite,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
+                }
+                IconButton(onClick = onDismiss, modifier = Modifier.size(28.dp)) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close",
+                        tint = TeacherTextMuted,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            }
+        },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                data class QuickActionItem(
+                    val title: String,
+                    val subtitle: String,
+                    val icon: ImageVector,
+                    val color: Color,
+                    val onClick: () -> Unit
+                )
+
+                val actions = listOf(
+                    QuickActionItem(
+                        title = "Create Quiz",
+                        subtitle = "Build an AI or manual quiz",
+                        icon = Icons.Default.Add,
+                        color = Color(0xFF8B5CF6),
+                        onClick = {
+                            onDismiss()
+                            onCreateQuizClick()
+                        }
+                    ),
+                    QuickActionItem(
+                        title = "Manage Students",
+                        subtitle = "View & track student submissions",
+                        icon = Icons.Default.Groups,
+                        color = Color(0xFF38BDF8),
+                        onClick = {
+                            onDismiss()
+                            onManageStudentsClick()
+                        }
+                    ),
+                    QuickActionItem(
+                        title = "View Analytics",
+                        subtitle = "Performance charts & insights",
+                        icon = Icons.Default.BarChart,
+                        color = Color(0xFF34D399),
+                        onClick = {
+                            onDismiss()
+                            onViewAnalyticsClick()
+                        }
+                    ),
+                    QuickActionItem(
+                        title = "Certificates",
+                        subtitle = "Issue and manage certificates",
+                        icon = Icons.Default.CardMembership,
+                        color = Color(0xFFF472B6),
+                        onClick = {
+                            onDismiss()
+                            onCertificatesClick()
+                        }
+                    ),
+                    QuickActionItem(
+                        title = "Join Requests",
+                        subtitle = "Review student class access requests",
+                        icon = Icons.Default.PersonAdd,
+                        color = Color(0xFFFBBF24),
+                        onClick = {
+                            onDismiss()
+                            onJoinRequestsClick()
+                        }
+                    ),
+                    QuickActionItem(
+                        title = "Notifications",
+                        subtitle = "Check system updates & alerts",
+                        icon = Icons.Default.Notifications,
+                        color = Color(0xFF818CF8),
+                        onClick = {
+                            onDismiss()
+                            onNotificationsClick()
+                        }
+                    )
+                )
+
+                actions.forEach { action ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(if (isDark) Color(0xFF0F172A) else Color(0xFFF8FAFC))
+                            .border(1.dp, TeacherCardBorder, RoundedCornerShape(12.dp))
+                            .clickable(onClick = action.onClick)
+                            .padding(horizontal = 12.dp, vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(action.color.copy(alpha = 0.15f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = action.icon,
+                                contentDescription = null,
+                                tint = action.color,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = action.title,
+                                color = TeacherTextWhite,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 13.5.sp
+                            )
+                            Text(
+                                text = action.subtitle,
+                                color = TeacherTextMuted,
+                                fontSize = 11.sp
+                            )
+                        }
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
+                            contentDescription = null,
+                            tint = TeacherTextMuted,
+                            modifier = Modifier.size(13.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {}
+    )
 }
 
