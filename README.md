@@ -198,6 +198,17 @@ npx firebase-tools login
 npx firebase-tools deploy --only hosting
 ```
 
+## 🚀 Release Notes & Changelog
+
+### 🌟 What's New in Version 5.0.2 (Latest Release)
+
+* 📊 **Comprehensive Teacher Analytics & Performance Suite**: Full-page interactive teacher dashboard with real-time score distributions, batch comparison metrics, completion ratios, and grading analytics.
+* 🏆 **3D Trophy & Modern UI Refresh**: Integrated high-resolution 3D trophy artwork in the teacher motivation card, unified dark-mode glassmorphic styling, and added the **All Quick Actions** modal.
+* 🤖 **AI Provider Toggles**: Added individual on/off controls for all supported AI models (Gemini, OpenAI, Claude, DeepSeek, OpenRouter, and AgentRouter) in Settings and the AI Keys dialog.
+* 📱 **Edge-to-Edge Display Optimization**: Fixed status bar insets and system padding across Teacher Analytics and multi-source quiz loading.
+* 🛡️ **Language Server & Exception Handling Refinement**: Streamlined exception handling across network providers for improved IDE and CI/CD compiler performance.
+* 📦 **Automated GitHub Release Pipeline**: Hardened CI/CD workflows for automated APK artifact packaging and distribution.
+
 ---
 
 ## 🛠️ Technology Stack Breakdown
