@@ -38,6 +38,12 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "Quiz-Master.apk"
+        }
+    }
 }
 
 dependencies {
