@@ -497,8 +497,8 @@ object AiConnectionTester {
         }.toList()
 
         val endpoints = listOf(
-            "https://co.agentrouter.org/v1/chat/completions",
-            "https://agentrouter.org/v1/chat/completions"
+            "https://agentrouter.org/v1/chat/completions",
+            "https://co.agentrouter.org/v1/chat/completions"
         )
 
         var lastStatusCode = 0
@@ -515,6 +515,8 @@ object AiConnectionTester {
                         doOutput = true
                         setRequestProperty("Content-Type", "application/json")
                         setRequestProperty("Authorization", "Bearer ${apiKey.trim()}")
+                        setRequestProperty("User-Agent", "claude-cli/2.1.0 (external, cli)")
+                        setRequestProperty("x-app", "cli")
                     }
 
                     val requestJson = JSONObject().apply {
@@ -559,26 +561,17 @@ object AiConnectionTester {
                             modelName = returnedModel,
                             aiResponse = replyText
                         )
-                    } else if (statusCode == 404 || statusCode == 429 || statusCode == 503 || ((statusCode == 400 || statusCode == 404) && responseBody.contains("model"))) {
-                        lastErrorMsg = try {
-                            JSONObject(responseBody).optJSONObject("error")?.optString("message") ?: responseBody
-                        } catch (_: Exception) {
-                            responseBody.take(250)
-                        }
-                        continue
                     } else {
-                        val errorMsg = try {
+                        lastErrorMsg = try {
                             val errJson = JSONObject(responseBody)
-                            errJson.optJSONObject("error")?.optString("message") ?: responseBody
+                            errJson.optJSONObject("error")?.optString("message")
+                                ?: errJson.optString("msg")
+                                ?: responseBody
                         } catch (e: Exception) {
                             responseBody.take(250)
                         }
-                        return@withContext AiConnectionResult(
-                            isSuccess = false,
-                            statusCode = statusCode,
-                            modelName = model,
-                            aiResponse = "Error ($statusCode): $errorMsg"
-                        )
+                        // Continue to next endpoint or model if rate limited, model not found, or unauthorized on this specific gateway
+                        continue
                     }
                 } catch (e: Exception) {
                     lastErrorMsg = e.localizedMessage ?: e.message ?: "Network error"

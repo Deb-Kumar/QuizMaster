@@ -38,8 +38,8 @@ class AgentRouterQuizProvider : AIQuizGenerator {
         }.toList()
 
         val endpoints = listOf(
-            "https://co.agentrouter.org/v1/chat/completions",
-            "https://agentrouter.org/v1/chat/completions"
+            "https://agentrouter.org/v1/chat/completions",
+            "https://co.agentrouter.org/v1/chat/completions"
         )
 
         var lastError: Exception? = null
@@ -54,6 +54,8 @@ class AgentRouterQuizProvider : AIQuizGenerator {
                         doOutput = true
                         setRequestProperty("Content-Type", "application/json")
                         setRequestProperty("Authorization", "Bearer ${apiKey.trim()}")
+                        setRequestProperty("User-Agent", "claude-cli/2.1.0 (external, cli)")
+                        setRequestProperty("x-app", "cli")
                     }
 
                     val prompt = AIQuizPromptHelper.buildPrompt(request)
@@ -82,24 +84,21 @@ class AgentRouterQuizProvider : AIQuizGenerator {
                     }
 
                     val statusCode = conn.responseCode
-                    if (statusCode == 404 || statusCode == 429 || statusCode == 503) {
-                        continue
-                    }
-
                     val isSuccess = statusCode in 200..299
                     val stream = if (isSuccess) conn.inputStream else conn.errorStream
                     val responseBody = BufferedReader(InputStreamReader(stream)).use { it.readText() }
 
                     if (!isSuccess) {
-                        if ((statusCode == 400 || statusCode == 404) && responseBody.contains("model")) {
-                            continue
-                        }
                         val errorMsg = try {
-                            JSONObject(responseBody).optJSONObject("error")?.optString("message") ?: responseBody
+                            val errObj = JSONObject(responseBody)
+                            errObj.optJSONObject("error")?.optString("message")
+                                ?: errObj.optString("msg")
+                                ?: responseBody
                         } catch (e: Exception) {
                             responseBody.take(200)
                         }
-                        return@withContext Result.failure(Exception("AgentRouter error ($statusCode): $errorMsg"))
+                        lastError = Exception("AgentRouter error ($statusCode): $errorMsg")
+                        continue
                     }
 
                     val json = JSONObject(responseBody)

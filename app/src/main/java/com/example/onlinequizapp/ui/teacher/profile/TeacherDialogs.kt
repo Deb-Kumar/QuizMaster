@@ -373,7 +373,7 @@ internal fun TeacherSettingsDialog(
                     // 1. OpenAI Key
                     ApiKeyInputField(
                         title = "OpenAI API Key",
-                        subtitle = "For GPT-4o-mini & GPT-3.5 Free Tier models",
+                        subtitle = "For GPT-4o-mini & GPT-3.5",
                         tag = "OpenAI",
                         tagColor = if (isDark) Color(0xFF10A37F) else Color(0xFF059669),
                         isEnabled = openAiEnabled,
@@ -427,7 +427,7 @@ internal fun TeacherSettingsDialog(
                     // 3. OpenRouter Key (Free Tier Models)
                     ApiKeyInputField(
                         title = "OpenRouter API Key",
-                        subtitle = "For NVIDIA Nemotron 3 Ultra & Free models",
+                        subtitle = "For NVIDIA Nemotron 3 Ultra",
                         tag = "OpenRouter",
                         tagColor = if (isDark) Color(0xFF818CF8) else Color(0xFF6366F1),
                         isEnabled = openRouterEnabled,
@@ -508,7 +508,7 @@ internal fun TeacherSettingsDialog(
                     // 6. AgentRouter Key
                     ApiKeyInputField(
                         title = "AgentRouter API Key",
-                        subtitle = "For DeepSeek-V4-Flash, GPT-6-Astra, Claude-Opus-4/5",
+                        subtitle = "For GPT-5.6-Sol, GPT-6-Astra, GPT-6.1-Sol",
                         tag = "AgentRouter",
                         tagColor = if (isDark) Color(0xFF818CF8) else Color(0xFF4F46E5),
                         isEnabled = agentRouterEnabled,
