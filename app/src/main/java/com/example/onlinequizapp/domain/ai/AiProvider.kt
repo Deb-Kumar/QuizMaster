@@ -6,5 +6,5 @@ enum class AiProvider(val displayName: String, val recommendedModel: String) {
     OPENROUTER("OpenRouter (Free)", "nvidia/nemotron-3-ultra-550b-a55b:free"),
     CLAUDE("Claude (Anthropic)", "claude-3-5-haiku-latest"),
     DEEPSEEK("DeepSeek", "deepseek-chat"),
-    AGENTROUTER("AgentRouter", "deepseek-v4-flash")
+    AGENTROUTER("AgentRouter", "gpt-5.6-sol")
 }

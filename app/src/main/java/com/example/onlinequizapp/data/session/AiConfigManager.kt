@@ -106,7 +106,7 @@ object AiConfigManager {
         getPrefs()?.edit()?.putString(KEY_AGENTROUTER_KEY, key.trim())?.apply()
     }
 
-    fun getAgentRouterModel(): String = getPrefs()?.getString(KEY_AGENTROUTER_MODEL, "deepseek-v4-flash") ?: "deepseek-v4-flash"
+    fun getAgentRouterModel(): String = getPrefs()?.getString(KEY_AGENTROUTER_MODEL, "gpt-5.6-sol") ?: "gpt-5.6-sol"
     fun setAgentRouterModel(model: String) {
         getPrefs()?.edit()?.putString(KEY_AGENTROUTER_MODEL, model.trim())?.apply()
     }

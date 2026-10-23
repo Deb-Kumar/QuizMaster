@@ -17,7 +17,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 /**
- * Quiz Generator utilizing AgentRouter (deepseek-v4-flash, gpt-6-astra, claude-opus-4-8, etc.).
+ * Quiz Generator utilizing AgentRouter (gpt-5.6-sol, gpt-6-astra, gpt-6.1-sol).
  */
 class AgentRouterQuizProvider : AIQuizGenerator {
 

@@ -477,13 +477,9 @@ object AiConnectionTester {
     }
 
     val DEFAULT_AGENTROUTER_MODELS = listOf(
-        "deepseek-v4-flash",
+        "gpt-5.6-sol",
         "gpt-6-astra",
-        "claude-opus-4-8",
-        "deepseek-r1",
-        "claude-opus-5",
-        "glm-5.3",
-        "gpt-5.6-sol"
+        "gpt-6.1-sol"
     )
 
     suspend fun testAgentRouter(apiKey: String): AiConnectionResult = withContext(Dispatchers.IO) {
