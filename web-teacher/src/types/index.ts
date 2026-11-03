@@ -64,9 +64,10 @@ export interface CertificateRecord {
 }
 
 export interface TeacherUser {
-  uid: string;
-  email: string | null;
-  displayName: string | null;
+  id: string;
+  email: string;
+  name: string;
   role: 'TEACHER' | 'STUDENT';
+  department?: string;
+  photoUrl?: string;
 }
-
