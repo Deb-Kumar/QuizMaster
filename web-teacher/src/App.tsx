@@ -7,6 +7,9 @@ import { CertificateVerifier } from './components/verification/CertificateVerifi
 import { AuthModal } from './components/auth/AuthModal';
 import { AboutModal } from './components/about/AboutModal';
 import { TeacherSettingsModal } from './components/profile/TeacherSettingsModal';
+import { TeacherProfileModal } from './components/profile/TeacherProfileModal';
+import { TeacherAnalyticsModal } from './components/analytics/TeacherAnalyticsModal';
+import { TeacherNotificationsModal } from './components/notifications/TeacherNotificationsModal';
 import { 
   ShieldCheck, 
   Users, 
@@ -17,8 +20,9 @@ import {
   LogOut, 
   ExternalLink,
   ChevronDown,
-  GraduationCap,
-  Key
+  Key,
+  BarChart3,
+  User
 } from 'lucide-react';
 
 const TeacherAppContent: React.FC = () => {
@@ -26,6 +30,9 @@ const TeacherAppContent: React.FC = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
+  const [showNotificationsModal, setShowNotificationsModal] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [authDefaultMode, setAuthDefaultMode] = useState<'login' | 'register'>('login');
 
@@ -43,14 +50,18 @@ const TeacherAppContent: React.FC = () => {
       <header className="sticky top-0 z-40 bg-[#070913]/90 backdrop-blur-xl border-b border-slate-800/80 px-4 lg:px-8 py-3 transition-all">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           
-          {/* Logo & Brand matching Android QuizMasterBrandTitle */}
+          {/* Logo & Brand using official app_logo.png */}
           <div 
             onClick={() => setActiveTab('home')}
             className="flex items-center gap-3 cursor-pointer select-none"
           >
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#7C3AED] via-indigo-500 to-[#3B82F6] p-0.5 shadow-lg shadow-indigo-500/25 flex items-center justify-center">
-              <div className="w-full h-full bg-[#070913] rounded-[14px] flex items-center justify-center">
-                <GraduationCap className="w-5 h-5 text-indigo-400" />
+              <div className="w-full h-full bg-[#070913] rounded-[14px] flex items-center justify-center p-1">
+                <img 
+                  src="/app_logo.png" 
+                  alt="QuizMaster Logo" 
+                  className="w-full h-full object-contain filter drop-shadow" 
+                />
               </div>
             </div>
             <div>
@@ -119,6 +130,15 @@ const TeacherAppContent: React.FC = () => {
           {/* Right Header Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
             
+            {/* Analytics Button */}
+            <button
+              onClick={() => setShowAnalyticsModal(true)}
+              className="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer"
+              title="Classroom Analytics"
+            >
+              <BarChart3 className="w-4 h-4" />
+            </button>
+
             {/* AI API Keys Config Button matching Android TeacherSettingsDialog */}
             <button
               onClick={() => setShowSettingsModal(true)}
@@ -139,12 +159,12 @@ const TeacherAppContent: React.FC = () => {
 
             {/* Notification Bell with red indicator dot matching Android TeacherNotificationButton */}
             <button
-              onClick={() => setActiveTab('batches')}
+              onClick={() => setShowNotificationsModal(true)}
               className="relative p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer"
               title="Notifications"
             >
               <Bell className="w-4 h-4" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
             </button>
 
             {/* User Profile or Sign In Button */}
@@ -184,6 +204,22 @@ const TeacherAppContent: React.FC = () => {
                       >
                         <LayoutDashboard className="w-4 h-4 text-indigo-400" />
                         <span>Teacher Dashboard</span>
+                      </button>
+
+                      <button
+                        onClick={() => setShowProfileModal(true)}
+                        className="w-full text-left px-3 py-2 text-xs text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
+                      >
+                        <User className="w-4 h-4 text-cyan-400" />
+                        <span>Instructor Profile</span>
+                      </button>
+
+                      <button
+                        onClick={() => setShowAnalyticsModal(true)}
+                        className="w-full text-left px-3 py-2 text-xs text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
+                      >
+                        <BarChart3 className="w-4 h-4 text-emerald-400" />
+                        <span>Classroom Analytics</span>
                       </button>
 
                       <button
@@ -319,6 +355,10 @@ const TeacherAppContent: React.FC = () => {
               AI Keys & Settings
             </button>
             <span>•</span>
+            <button onClick={() => setShowAnalyticsModal(true)} className="hover:text-indigo-400 cursor-pointer">
+              Analytics
+            </button>
+            <span>•</span>
             <a href="https://quizmaster-dd2f8.web.app" target="_blank" rel="noreferrer" className="hover:text-indigo-400">
               Live Firebase Portal
             </a>
@@ -345,6 +385,22 @@ const TeacherAppContent: React.FC = () => {
       <TeacherSettingsModal
         isOpen={showSettingsModal}
         onClose={() => setShowSettingsModal(false)}
+      />
+
+      <TeacherProfileModal
+        isOpen={showProfileModal}
+        onClose={() => setShowProfileModal(false)}
+      />
+
+      <TeacherAnalyticsModal
+        isOpen={showAnalyticsModal}
+        onClose={() => setShowAnalyticsModal(false)}
+      />
+
+      <TeacherNotificationsModal
+        isOpen={showNotificationsModal}
+        onClose={() => setShowNotificationsModal(false)}
+        onNavigateBatches={() => setActiveTab('batches')}
       />
 
     </div>
