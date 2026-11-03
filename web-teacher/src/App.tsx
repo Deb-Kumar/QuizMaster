@@ -47,15 +47,15 @@ const TeacherAppContent: React.FC = () => {
     <div className="min-h-screen bg-[#070913] text-slate-100 flex flex-col selection:bg-indigo-500/30 selection:text-indigo-200">
       
       {/* Top Android Material 3 Navigation Bar matching TeacherHomeContent.kt */}
-      <header className="sticky top-0 z-40 bg-[#070913]/90 backdrop-blur-xl border-b border-slate-800/80 px-4 lg:px-8 py-3 transition-all">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-40 bg-[#070913]/90 backdrop-blur-xl border-b border-slate-800/80 px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 transition-all">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
           
           {/* Logo & Brand using official app_logo.png */}
           <div 
             onClick={() => setActiveTab('home')}
-            className="flex items-center gap-3 cursor-pointer select-none"
+            className="flex items-center gap-2.5 sm:gap-3 cursor-pointer select-none"
           >
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#7C3AED] via-indigo-500 to-[#3B82F6] p-0.5 shadow-lg shadow-indigo-500/25 flex items-center justify-center">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-[#7C3AED] via-indigo-500 to-[#3B82F6] p-0.5 shadow-lg shadow-indigo-500/25 flex items-center justify-center shrink-0">
               <div className="w-full h-full bg-[#070913] rounded-[14px] flex items-center justify-center p-1">
                 <img 
                   src="/app_logo.png" 
@@ -64,19 +64,16 @@ const TeacherAppContent: React.FC = () => {
                 />
               </div>
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-black text-lg md:text-xl tracking-tight text-white">QuizMaster</span>
-                {/* Teacher Badge matching Android TeacherTheme.kt */}
-                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#0F173C] text-white border border-[#1E2858] shadow-sm">
-                  👨‍🏫 Teacher
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-400 hidden sm:block">Unified Teacher Portal & Assessment Engine</p>
+            <div className="flex items-center gap-2">
+              <span className="font-black text-lg sm:text-xl tracking-tight text-white">QuizMaster</span>
+              {/* Teacher Badge matching Android TeacherTheme.kt */}
+              <span className="px-2 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold bg-[#0F173C] text-white border border-[#1E2858] shadow-sm shrink-0">
+                👨‍🏫 Teacher
+              </span>
             </div>
           </div>
 
-          {/* Navigation Tabs (Android Segmented Pill Bar) */}
+          {/* Navigation Tabs (Android Segmented Pill Bar - Desktop) */}
           <nav className="hidden md:flex items-center bg-slate-900/90 border border-slate-800/90 p-1 rounded-2xl shadow-inner">
             <button
               onClick={() => setActiveTab('home')}
@@ -128,30 +125,28 @@ const TeacherAppContent: React.FC = () => {
           </nav>
 
           {/* Right Header Actions */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-2.5">
             
-            {/* Analytics Button */}
+            {/* Desktop-only secondary tools */}
             <button
               onClick={() => setShowAnalyticsModal(true)}
-              className="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer"
+              className="hidden md:flex p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer"
               title="Classroom Analytics"
             >
               <BarChart3 className="w-4 h-4" />
             </button>
 
-            {/* AI API Keys Config Button matching Android TeacherSettingsDialog */}
             <button
               onClick={() => setShowSettingsModal(true)}
-              className="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-indigo-300 transition-colors cursor-pointer"
+              className="hidden md:flex p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-indigo-300 transition-colors cursor-pointer"
               title="AI Keys & Model Settings"
             >
               <Key className="w-4 h-4" />
             </button>
 
-            {/* About Us Button matching Android AboutUsDialog */}
             <button
               onClick={() => setShowAboutModal(true)}
-              className="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer"
+              className="hidden sm:flex p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer"
               title="About QuizMaster v5.0.2"
             >
               <Info className="w-4 h-4" />
@@ -160,7 +155,7 @@ const TeacherAppContent: React.FC = () => {
             {/* Notification Bell with red indicator dot matching Android TeacherNotificationButton */}
             <button
               onClick={() => setShowNotificationsModal(true)}
-              className="relative p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer"
+              className="relative p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer shrink-0"
               title="Notifications"
             >
               <Bell className="w-4 h-4" />
@@ -172,15 +167,15 @@ const TeacherAppContent: React.FC = () => {
               <div className="relative">
                 <button
                   onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-                  className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-200 transition-colors cursor-pointer"
+                  className="flex items-center gap-1.5 sm:gap-2 pl-1.5 sm:pl-2 pr-2 sm:pr-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-200 transition-colors cursor-pointer"
                 >
-                  <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-indigo-600 to-blue-600 flex items-center justify-center text-xs font-bold text-white">
+                  <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-indigo-600 to-blue-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
                     {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'T'}
                   </div>
-                  <span className="text-xs font-semibold max-w-[100px] truncate hidden sm:inline">
+                  <span className="text-xs font-semibold max-w-[80px] sm:max-w-[110px] truncate hidden xs:inline">
                     {currentUser.name || 'Instructor'}
                   </span>
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                  <ChevronDown className="w-3 h-3 text-slate-400" />
                 </button>
 
                 {/* Dropdown Menu matching Android ProfileTab */}
@@ -252,10 +247,10 @@ const TeacherAppContent: React.FC = () => {
                 )}
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <button
                   onClick={() => handleOpenAuth('login')}
-                  className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold text-xs shadow-md shadow-indigo-600/30 transition-all cursor-pointer"
+                  className="px-3 sm:px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold text-xs shadow-md shadow-indigo-600/30 transition-all cursor-pointer whitespace-nowrap"
                 >
                   Sign In
                 </button>
@@ -282,50 +277,10 @@ const TeacherAppContent: React.FC = () => {
 
           </div>
         </div>
-
-        {/* Mobile Navigation Tabs */}
-        <div className="flex md:hidden items-center justify-around pt-2.5 mt-2 border-t border-slate-800/80">
-          <button
-            onClick={() => setActiveTab('home')}
-            className={`flex flex-col items-center gap-1 py-1 px-2 text-[10px] font-bold ${
-              activeTab === 'home' ? 'text-indigo-400' : 'text-slate-400'
-            }`}
-          >
-            <LayoutDashboard className="w-4 h-4" />
-            <span>Home</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('studio')}
-            className={`flex flex-col items-center gap-1 py-1 px-2 text-[10px] font-bold ${
-              activeTab === 'studio' ? 'text-indigo-400' : 'text-slate-400'
-            }`}
-          >
-            <BookOpen className="w-4 h-4" />
-            <span>Studio</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('batches')}
-            className={`flex flex-col items-center gap-1 py-1 px-2 text-[10px] font-bold ${
-              activeTab === 'batches' ? 'text-indigo-400' : 'text-slate-400'
-            }`}
-          >
-            <Users className="w-4 h-4" />
-            <span>Batches</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('verify')}
-            className={`flex flex-col items-center gap-1 py-1 px-2 text-[10px] font-bold ${
-              activeTab === 'verify' ? 'text-indigo-400' : 'text-slate-400'
-            }`}
-          >
-            <ShieldCheck className="w-4 h-4" />
-            <span>Verify</span>
-          </button>
-        </div>
       </header>
 
-      {/* Main Content Area */}
-      <main className="flex-1">
+      {/* Main Content Area with safe bottom padding for mobile navigation */}
+      <main className="flex-1 pb-24 md:pb-8">
         {activeTab === 'home' && (
           <TeacherHome 
             onNavigateTab={setActiveTab}
@@ -342,17 +297,72 @@ const TeacherAppContent: React.FC = () => {
         {activeTab === 'verify' && <CertificateVerifier />}
       </main>
 
+      {/* Android Native Material 3 Bottom Navigation Bar for Mobile matching TeacherBottomNavBar.kt */}
+      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-[#070913]/95 backdrop-blur-2xl border-t border-slate-800/90 py-2 px-3 flex md:hidden items-center justify-around shadow-2xl safe-area-pb">
+        <button
+          onClick={() => {
+            setActiveTab('home');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all cursor-pointer ${
+            activeTab === 'home' ? 'text-indigo-400 font-bold scale-105' : 'text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <LayoutDashboard className="w-5 h-5" />
+          <span className="text-[10px]">Dashboard</span>
+        </button>
+
+        <button
+          onClick={() => {
+            setActiveTab('studio');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all cursor-pointer ${
+            activeTab === 'studio' ? 'text-indigo-400 font-bold scale-105' : 'text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <BookOpen className="w-5 h-5" />
+          <span className="text-[10px]">Studio</span>
+        </button>
+
+        <button
+          onClick={() => {
+            setActiveTab('batches');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all cursor-pointer ${
+            activeTab === 'batches' ? 'text-indigo-400 font-bold scale-105' : 'text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <Users className="w-5 h-5" />
+          <span className="text-[10px]">Batches</span>
+        </button>
+
+        <button
+          onClick={() => {
+            setActiveTab('verify');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all cursor-pointer ${
+            activeTab === 'verify' ? 'text-indigo-400 font-bold scale-105' : 'text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <ShieldCheck className="w-5 h-5" />
+          <span className="text-[10px]">Verify</span>
+        </button>
+      </nav>
+
       {/* Footer matching Android About Specifications */}
-      <footer className="border-t border-slate-900 py-6 px-4 text-center text-xs text-slate-500">
+      <footer className="border-t border-slate-900 py-6 px-4 text-center text-xs text-slate-500 mb-14 md:mb-0">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <p>© 2026 QuizMaster Academy • Enterprise Educational Platform</p>
-          <div className="flex items-center gap-4 text-slate-400">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-slate-400 text-[11px] sm:text-xs">
             <button onClick={() => setShowAboutModal(true)} className="hover:text-indigo-400 cursor-pointer">
               About QuizMaster v5.0.2
             </button>
             <span>•</span>
             <button onClick={() => setShowSettingsModal(true)} className="hover:text-indigo-400 cursor-pointer">
-              AI Keys & Settings
+              AI Keys
             </button>
             <span>•</span>
             <button onClick={() => setShowAnalyticsModal(true)} className="hover:text-indigo-400 cursor-pointer">
