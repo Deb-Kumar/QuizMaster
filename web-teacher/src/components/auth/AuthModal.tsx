@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Lock, Mail, Eye, EyeOff, ArrowRight, X, ExternalLink, User, GraduationCap } from 'lucide-react';
+import { Lock, Mail, Eye, EyeOff, ArrowRight, X, User } from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -10,7 +10,6 @@ interface AuthModalProps {
 
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, defaultMode = 'login' }) => {
   const [isLogin, setIsLogin] = useState(defaultMode === 'login');
-  const [selectedRole, setSelectedRole] = useState<'teacher' | 'student'>('teacher');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -25,11 +24,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, defaultMo
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
-    if (selectedRole === 'student') {
-      setError('Student accounts must use the QuizMaster Android app to access quizzes and streak tracking.');
-      return;
-    }
 
     setLoading(true);
 
@@ -104,7 +98,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, defaultMo
         </div>
 
         {/* Welcome Multi-Colored Title matching Android LoginScreen.kt */}
-        <div className="text-center mb-5">
+        <div className="text-center mb-6">
           <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             <span className="text-white">{isLogin ? 'Welcome ' : 'Teacher '}</span>
             <span className="text-[#8B5CF6]">{isLogin ? 'Back' : 'Registration'}</span>
@@ -115,52 +109,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, defaultMo
               : 'Create an authorized instructor account to publish quizzes & batches'}
           </p>
         </div>
-
-        {/* Role Selector Tab matching Android AuthRoleSelector */}
-        <div className="grid grid-cols-2 p-1 bg-[#05091C] border border-[#16214C] rounded-2xl mb-5">
-          <button
-            type="button"
-            onClick={() => setSelectedRole('teacher')}
-            className={`flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${
-              selectedRole === 'teacher'
-                ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <span>👨‍🏫 Teacher</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setSelectedRole('student')}
-            className={`flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${
-              selectedRole === 'student'
-                ? 'bg-slate-800 text-slate-200 border border-slate-700'
-                : 'text-slate-500 hover:text-slate-300'
-            }`}
-          >
-            <GraduationCap className="w-3.5 h-3.5" />
-            <span>Student</span>
-          </button>
-        </div>
-
-        {/* Notice if Student is selected */}
-        {selectedRole === 'student' && (
-          <div className="mb-5 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs">
-            <p className="font-semibold">Looking for Student Quizzes?</p>
-            <p className="text-[11px] text-amber-200/80 mt-1">
-              Student test taking, leaderboards, and streak tracking are managed directly within the QuizMaster Android APK.
-            </p>
-            <a
-              href="https://github.com/Deb-Kumar/QuizMaster/releases"
-              target="_blank"
-              rel="noreferrer"
-              className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold text-amber-400 hover:underline"
-            >
-              <span>Download Android APK</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
-          </div>
-        )}
 
         {/* Error message */}
         {error && (
