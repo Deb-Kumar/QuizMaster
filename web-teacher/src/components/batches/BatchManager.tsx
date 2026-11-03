@@ -29,31 +29,8 @@ export const BatchManager: React.FC = () => {
       })) as Batch[];
       setBatches(list);
     } catch (err) {
-      console.warn('Could not fetch batches from firestore, using sample local list:', err);
-      setBatches([
-        {
-          id: 'b_sample_1',
-          code: 'KT3921',
-          name: 'Android Kotlin Masterclass 2026',
-          description: 'Jetpack Compose, Clean Architecture, and Coroutines Batch',
-          teacherId: 'teacher_web',
-          teacherName: 'Lead Instructor',
-          studentIds: ['s1', 's2', 's3', 's4'],
-          pendingRequests: ['s5'],
-          createdAt: Date.now() - 86400000 * 4
-        },
-        {
-          id: 'b_sample_2',
-          code: 'WEB882',
-          name: 'Fullstack Web & Cloud Engineering',
-          description: 'React, Node.js, and Cloud Infrastructure cohorts',
-          teacherId: 'teacher_web',
-          teacherName: 'Lead Instructor',
-          studentIds: ['s10', 's11'],
-          pendingRequests: [],
-          createdAt: Date.now() - 86400000 * 10
-        }
-      ]);
+      console.error('Error fetching batches from Firestore:', err);
+      setBatches([]);
     } finally {
       setLoading(false);
     }

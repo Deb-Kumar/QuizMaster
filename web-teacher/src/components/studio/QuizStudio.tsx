@@ -19,20 +19,20 @@ export const QuizStudio: React.FC<QuizStudioProps> = ({ onQuizCreated }) => {
   const [saving, setSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
 
-  // Questions state
+  // Questions state (start with empty form for teachers to create)
   const [questions, setQuestions] = useState<Question[]>([
     {
-      id: 'q_1',
-      text: 'What is the primary role of a ViewModel in Android Architecture Components?',
+      id: `q_${Date.now()}`,
+      text: '',
       options: [
-        { id: 'opt_1', text: 'Store and manage UI-related data across configuration changes' },
-        { id: 'opt_2', text: 'Directly draw UI pixels onto the screen canvas' },
-        { id: 'opt_3', text: 'Manage SQLite database queries on the main thread' },
-        { id: 'opt_4', text: 'Handle Android permissions exclusively' }
+        { id: `opt_${Date.now()}_1`, text: '' },
+        { id: `opt_${Date.now()}_2`, text: '' },
+        { id: `opt_${Date.now()}_3`, text: '' },
+        { id: `opt_${Date.now()}_4`, text: '' }
       ],
-      correctOptionIds: ['opt_1'],
-      explanation: 'ViewModels survive configuration changes (like screen rotations) and decouple data flow from Activity lifecycles.',
-      hint: 'Think about screen rotation data retention.'
+      correctOptionIds: [],
+      explanation: '',
+      hint: ''
     }
   ]);
 

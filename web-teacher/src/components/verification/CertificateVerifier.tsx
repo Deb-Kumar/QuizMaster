@@ -101,27 +101,7 @@ export const CertificateVerifier: React.FC = () => {
       }
     } catch (err: unknown) {
       console.error("Firestore lookup error", err);
-      // Fallback Demo Preview if sample QM certificate code tested
-      if (targetId.startsWith('QM-') || targetId.length > 5) {
-        const demoDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-        setCertificate({
-          id: targetId,
-          certificateId: targetId,
-          studentId: 'STU-1092',
-          studentName: 'Verified Scholar',
-          quizId: 'QZ-LIVE',
-          quizTitle: 'Advanced Android & Computer Science Examination',
-          score: 18,
-          totalQuestions: 20,
-          percentage: 90,
-          issuedAt: demoDate,
-          grade: 'Distinction',
-          verificationUrl: `https://quizmaster-dd2f8.web.app/verify/${targetId}`
-        });
-        triggerCelebration();
-      } else {
-        setErrorMsg('Error querying credential database. Check connection or verify identifier format.');
-      }
+      setErrorMsg('Error querying credential database. Check connection or verify identifier format.');
     } finally {
       setLoading(false);
     }
@@ -161,7 +141,7 @@ export const CertificateVerifier: React.FC = () => {
       </div>
 
       {/* Input Box with Android Elevation Vibes */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-3 shadow-2xl backdrop-blur-xl mb-8 flex flex-col sm:flex-row gap-2 transition-all hover:border-indigo-500/40 focus-within:border-indigo-500/60 focus-within:ring-2 focus-within:ring-indigo-500/20">
+      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-3 shadow-2xl backdrop-blur-xl mb-10 flex flex-col sm:flex-row gap-2 transition-all hover:border-indigo-500/40 focus-within:border-indigo-500/60 focus-within:ring-2 focus-within:ring-indigo-500/20">
         <div className="relative flex-1 flex items-center pl-3">
           <Search className="w-5 h-5 text-slate-400 mr-2 shrink-0" />
           <input
@@ -187,23 +167,6 @@ export const CertificateVerifier: React.FC = () => {
             </>
           )}
         </button>
-      </div>
-
-      {/* Sample Quick Chips */}
-      <div className="flex flex-wrap items-center justify-center gap-2 mb-10 text-xs text-slate-400">
-        <span>Try sample code:</span>
-        {['QM-JS92-20261125-003', 'QM-OOP-20261014-001'].map((sample) => (
-          <button
-            key={sample}
-            onClick={() => {
-              setCertInput(sample);
-              verifyCertificate(sample);
-            }}
-            className="px-2.5 py-1 bg-slate-800/80 hover:bg-slate-700 text-indigo-300 rounded-lg border border-slate-700/60 font-mono transition-colors"
-          >
-            {sample}
-          </button>
-        ))}
       </div>
 
       {/* Loading Skeleton */}
