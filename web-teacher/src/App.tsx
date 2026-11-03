@@ -125,155 +125,134 @@ const TeacherAppContent: React.FC = () => {
           </nav>
 
           {/* Right Header Actions */}
-          <div className="flex items-center gap-1.5 sm:gap-2.5">
+          <div className="flex items-center gap-2 sm:gap-3">
             
-            {/* Desktop-only secondary tools */}
-            <button
-              onClick={() => setShowAnalyticsModal(true)}
-              className="hidden md:flex p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer"
-              title="Classroom Analytics"
+            {/* Android APK Link (Desktop) */}
+            <a
+              href="https://github.com/Deb-Kumar/QuizMaster/releases"
+              target="_blank"
+              rel="noreferrer"
+              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold transition-colors"
+              title="Download Quiz-Master.apk"
             >
-              <BarChart3 className="w-4 h-4" />
-            </button>
+              <span>Android APK</span>
+              <ExternalLink className="w-3 h-3 text-slate-400" />
+            </a>
 
-            <button
-              onClick={() => setShowSettingsModal(true)}
-              className="hidden md:flex p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-indigo-300 transition-colors cursor-pointer"
-              title="AI Keys & Model Settings"
-            >
-              <Key className="w-4 h-4" />
-            </button>
-
-            <button
-              onClick={() => setShowAboutModal(true)}
-              className="hidden sm:flex p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer"
-              title="About QuizMaster v5.0.2"
-            >
-              <Info className="w-4 h-4" />
-            </button>
-
-            {/* Notification Bell with red indicator dot matching Android TeacherNotificationButton */}
-            <button
-              onClick={() => setShowNotificationsModal(true)}
-              className="relative p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer shrink-0"
-              title="Notifications"
-            >
-              <Bell className="w-4 h-4" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-            </button>
-
-            {/* User Profile or Sign In Button */}
+            {/* If logged in: Notification Bell + Teacher Profile Dropdown */}
             {currentUser ? (
-              <div className="relative">
+              <div className="flex items-center gap-2">
+                {/* Notification Bell */}
                 <button
-                  onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-                  className="flex items-center gap-1.5 sm:gap-2 pl-1.5 sm:pl-2 pr-2 sm:pr-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-200 transition-colors cursor-pointer"
+                  onClick={() => setShowNotificationsModal(true)}
+                  className="relative p-2 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer shrink-0"
+                  title="Notifications"
                 >
-                  <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-indigo-600 to-blue-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
-                    {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'T'}
-                  </div>
-                  <span className="text-xs font-semibold max-w-[80px] sm:max-w-[110px] truncate hidden xs:inline">
-                    {currentUser.name || 'Instructor'}
-                  </span>
-                  <ChevronDown className="w-3 h-3 text-slate-400" />
+                  <Bell className="w-4 h-4" />
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
                 </button>
 
-                {/* Dropdown Menu matching Android ProfileTab */}
-                {showProfileDropdown && (
-                  <div 
-                    className="absolute right-0 mt-2 w-56 bg-[#0F172A] border border-[#1E293B] rounded-2xl p-2 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150"
-                    onClick={() => setShowProfileDropdown(false)}
+                {/* Profile Pill & Dropdown */}
+                <div className="relative">
+                  <button
+                    onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                    className="flex items-center gap-2 pl-1.5 sm:pl-2 pr-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 text-slate-200 transition-colors cursor-pointer"
                   >
-                    <div className="px-3 py-2 border-b border-slate-800">
-                      <p className="text-xs font-bold text-white truncate">{currentUser.name}</p>
-                      <p className="text-[11px] text-slate-400 truncate">{currentUser.email}</p>
-                      <span className="mt-1 inline-block text-[10px] font-semibold text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-full">
-                        {currentUser.department || 'Teacher'}
-                      </span>
+                    <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-indigo-600 to-blue-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
+                      {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'T'}
                     </div>
+                    <span className="text-xs font-semibold max-w-[90px] sm:max-w-[120px] truncate hidden sm:inline">
+                      {currentUser.name || 'Instructor'}
+                    </span>
+                    <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                  </button>
 
-                    <div className="py-1">
-                      <button
-                        onClick={() => { setActiveTab('home'); }}
-                        className="w-full text-left px-3 py-2 text-xs text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
-                      >
-                        <LayoutDashboard className="w-4 h-4 text-indigo-400" />
-                        <span>Teacher Dashboard</span>
-                      </button>
+                  {/* Dropdown Menu */}
+                  {showProfileDropdown && (
+                    <div 
+                      className="absolute right-0 mt-2 w-60 bg-[#0F172A] border border-[#1E293B] rounded-2xl p-2 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150"
+                      onClick={() => setShowProfileDropdown(false)}
+                    >
+                      <div className="px-3 py-2.5 border-b border-slate-800">
+                        <p className="text-xs font-bold text-white truncate">{currentUser.name}</p>
+                        <p className="text-[11px] text-slate-400 truncate">{currentUser.email}</p>
+                        <span className="mt-1.5 inline-block text-[10px] font-semibold text-indigo-400 bg-indigo-500/15 border border-indigo-500/25 px-2 py-0.5 rounded-full">
+                          {currentUser.department || 'Computer Science'}
+                        </span>
+                      </div>
 
-                      <button
-                        onClick={() => setShowProfileModal(true)}
-                        className="w-full text-left px-3 py-2 text-xs text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
-                      >
-                        <User className="w-4 h-4 text-cyan-400" />
-                        <span>Instructor Profile</span>
-                      </button>
+                      <div className="py-1">
+                        <button
+                          onClick={() => { setActiveTab('home'); }}
+                          className="w-full text-left px-3 py-2 text-xs text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
+                        >
+                          <LayoutDashboard className="w-4 h-4 text-indigo-400" />
+                          <span>Teacher Dashboard</span>
+                        </button>
 
-                      <button
-                        onClick={() => setShowAnalyticsModal(true)}
-                        className="w-full text-left px-3 py-2 text-xs text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
-                      >
-                        <BarChart3 className="w-4 h-4 text-emerald-400" />
-                        <span>Classroom Analytics</span>
-                      </button>
+                        <button
+                          onClick={() => setShowProfileModal(true)}
+                          className="w-full text-left px-3 py-2 text-xs text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
+                        >
+                          <User className="w-4 h-4 text-cyan-400" />
+                          <span>Instructor Profile</span>
+                        </button>
 
-                      <button
-                        onClick={() => setShowSettingsModal(true)}
-                        className="w-full text-left px-3 py-2 text-xs text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
-                      >
-                        <Key className="w-4 h-4 text-purple-400" />
-                        <span>AI API Keys & Models</span>
-                      </button>
+                        <button
+                          onClick={() => setShowAnalyticsModal(true)}
+                          className="w-full text-left px-3 py-2 text-xs text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
+                        >
+                          <BarChart3 className="w-4 h-4 text-emerald-400" />
+                          <span>Classroom Analytics</span>
+                        </button>
 
-                      <button
-                        onClick={() => setShowAboutModal(true)}
-                        className="w-full text-left px-3 py-2 text-xs text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
-                      >
-                        <Info className="w-4 h-4 text-blue-400" />
-                        <span>About QuizMaster</span>
-                      </button>
+                        <button
+                          onClick={() => setShowSettingsModal(true)}
+                          className="w-full text-left px-3 py-2 text-xs text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
+                        >
+                          <Key className="w-4 h-4 text-purple-400" />
+                          <span>AI API Keys & Models</span>
+                        </button>
+
+                        <button
+                          onClick={() => setShowAboutModal(true)}
+                          className="w-full text-left px-3 py-2 text-xs text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
+                        >
+                          <Info className="w-4 h-4 text-blue-400" />
+                          <span>About QuizMaster</span>
+                        </button>
+                      </div>
+
+                      <div className="pt-1 border-t border-slate-800">
+                        <button
+                          onClick={() => logout()}
+                          className="w-full text-left px-3 py-2 text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          <span>Sign Out</span>
+                        </button>
+                      </div>
                     </div>
-
-                    <div className="pt-1 border-t border-slate-800">
-                      <button
-                        onClick={() => logout()}
-                        className="w-full text-left px-3 py-2 text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        <span>Sign Out</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             ) : (
-              <div className="flex items-center gap-1.5 sm:gap-2">
+              /* If not logged in: Clean Sign In & Register */
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => handleOpenAuth('login')}
-                  className="px-3 sm:px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold text-xs shadow-md shadow-indigo-600/30 transition-all cursor-pointer whitespace-nowrap"
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors cursor-pointer"
                 >
                   Sign In
                 </button>
                 <button
                   onClick={() => handleOpenAuth('register')}
-                  className="hidden sm:inline-block px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 font-semibold text-xs transition-colors cursor-pointer"
+                  className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold text-xs shadow-md shadow-indigo-600/30 transition-all cursor-pointer whitespace-nowrap"
                 >
                   Register
                 </button>
               </div>
             )}
-
-            {/* Android APK Link */}
-            <a
-              href="https://github.com/Deb-Kumar/QuizMaster/releases"
-              target="_blank"
-              rel="noreferrer"
-              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold transition-colors"
-              title="Download Quiz-Master.apk"
-            >
-              <span>Android APK</span>
-              <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
-            </a>
 
           </div>
         </div>
